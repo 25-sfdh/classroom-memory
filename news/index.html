@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>班级新闻 - 高2022级15班回忆馆</title>
+  <meta name="description" content="高2022级15班班级新闻，发布班级通知、聚会安排、资料整理进度等内容。">
+  <meta name="theme-color" content="#2f6f6a">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <div id="password-gate" class="password-gate">
+    <div class="password-card">
+      <p class="eyebrow">Private Access</p>
+      <h1>高2022级15班回忆馆</h1>
+      <p>请输入访问密码后进入网站。</p>
+      <form id="password-form" class="stacked-form">
+        <label>
+          访问密码
+          <input id="password-input" type="password" placeholder="请输入密码" autocomplete="current-password" required>
+        </label>
+        <button class="button primary" type="submit">进入网站</button>
+      </form>
+      <p id="password-error" class="password-error" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <a href="#main-content" class="skip-link">跳到主要内容</a>
+
+  <header class="site-header">
+    <a class="brand" href="../index.html" aria-label="回到首页">
+      <span class="brand-mark">忆</span>
+      <span>高2022级15班回忆馆</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="主导航">
+      <a href="../index.html">首页</a>
+      <a href="../members/index.html">班级成员</a>
+      <a href="../activities/index.html">班级活动</a>
+      <a href="../photos/index.html">照片上传</a>
+      <a href="../memories/index.html">回忆墙</a>
+      <a href="../news/index.html" class="active">班级新闻</a>
+      <a href="../history/index.html">班级历史</a>
+      <a href="../messages/index.html">留言板</a>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section id="news" class="section muted" aria-labelledby="news-title">
+      <div class="section-heading">
+        <p class="eyebrow">Notice</p>
+        <h2 id="news-title">班级新闻</h2>
+        <p>可以发布班级通知、聚会安排、资料整理进度等内容。</p>
+      </div>
+      <div class="editor-layout">
+        <form id="news-form" class="stacked-form panel">
+          <label>
+            日期
+            <input id="news-date" type="date" required>
+          </label>
+          <label>
+            新闻标题
+            <input id="news-title-input" type="text" placeholder="例如：毕业照电子版整理中" required>
+          </label>
+          <label>
+            新闻内容
+            <textarea id="news-text" rows="4" placeholder="写下通知或安排详情" required></textarea>
+          </label>
+          <button class="button primary" type="submit">发布新闻</button>
+        </form>
+        <div id="news-list" class="news-list" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>版权所有 &copy; 2026 高2022级15班回忆馆<br>管理者邮箱：<a href="mailto:wuqingxu@mail.ustc.edu.cn">wuqingxu@mail.ustc.edu.cn</a></p>
+    <a href="../index.html">回到首页</a>
+  </footer>
+
+  <script src="../common.js"></script>
+  <script src="../news.js"></script>
+</body>
+</html>
