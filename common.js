@@ -10,6 +10,92 @@ const API_BASE = (function () {
   return "https://YOUR_APP_NAME.onrender.com";
 })();
 
+// ── Supabase 前端直连（匿名 key，安全用于客户端） ──
+
+const SUPABASE_URL = "https://emonrzvnfgqzlnsmewpy.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_uOKwXc5ZP7O3qkRMbOl8tA_sCvNm2z6";
+
+async function supabaseFetch(url, options = {}) {
+  const res = await fetch(url, {
+    ...options,
+    headers: {
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json",
+      ...options.headers
+    }
+  });
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`Supabase ${res.status}: ${text}`);
+  }
+  return res.json();
+}
+
+// ── 数据读取：优先 Supabase，失败后 API 兜底 ──
+
+const SUPABASE_TABLES = ["members", "messages", "news", "photos"];
+
+function mapSupabaseRow(category, row) {
+  switch (category) {
+    case "messages":
+      return { name: row.name, text: row.content, date: row.created_at, id: row.id, created_at: row.created_at };
+    case "members":
+      return { name: row.name, photo: row.avatar_url, note: row.bio, id: row.id, created_at: row.created_at };
+    case "photos":
+      return { name: row.title, image: row.image_url, caption: row.description, date: row.created_at, id: row.id, created_at: row.created_at };
+    case "news":
+      return { title: row.title, text: row.content, date: row.created_at, id: row.id, created_at: row.created_at };
+    default:
+      return row;
+  }
+}
+
+async function fetchList(category) {
+  if (SUPABASE_TABLES.includes(category)) {
+    try {
+      const url = `${SUPABASE_URL}/rest/v1/${category}?select=*&order=created_at.desc`;
+      const data = await supabaseFetch(url);
+      if (data && data.length > 0) {
+        return data.map(row => mapSupabaseRow(category, row));
+      }
+      return [];
+    } catch (e) {
+      console.warn("Supabase 读取失败，使用后端 API 兜底", e.message);
+    }
+  }
+  return api("GET", `/api/${category}`);
+}
+
+// ── 新增数据：消息走 Supabase，其余走后端 API（需密码） ──
+
+async function createItem(category, data) {
+  if (category === "messages") {
+    try {
+      await supabaseFetch(`${SUPABASE_URL}/rest/v1/messages`, {
+        method: "POST",
+        body: JSON.stringify({
+          name: data.name,
+          content: data.text,
+          created_at: new Date().toISOString()
+        })
+      });
+      return { ok: true };
+    } catch (e) {
+      console.warn("Supabase 写入失败，使用后端 API 兜底", e.message);
+    }
+  }
+  return api("POST", `/api/${category}`, data);
+}
+
+async function updateItem(category, id, data) {
+  return api("PUT", `/api/${category}/${id}`, data);
+}
+
+async function deleteItem(category, id) {
+  return api("DELETE", `/api/${category}/${id}`);
+}
+
 let uploadedFile = null;
 const domCache = new Map();
 
@@ -20,7 +106,7 @@ function getCachedElement(id) {
   return domCache.get(id);
 }
 
-// ── 网络 API ──
+// ── 后端 API（密码验证、后台管理、上传） ──
 
 async function api(method, path, body) {
   const opts = { method, headers: {}, credentials: "include" };
@@ -37,22 +123,6 @@ async function api(method, path, body) {
     throw new Error("登录已过期，请重新输入密码");
   }
   return res.json();
-}
-
-async function fetchList(category) {
-  return api("GET", `/api/${category}`);
-}
-
-async function createItem(category, data) {
-  return api("POST", `/api/${category}`, data);
-}
-
-async function updateItem(category, id, data) {
-  return api("PUT", `/api/${category}/${id}`, data);
-}
-
-async function deleteItem(category, id) {
-  return api("DELETE", `/api/${category}/${id}`);
 }
 
 async function uploadImage(file) {

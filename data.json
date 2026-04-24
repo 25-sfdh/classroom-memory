@@ -1,0 +1,83 @@
+[
+  {
+    "category": "memories",
+    "data": "{\"name\":\"班长\",\"text\":\"最难忘的是毕业前最后一次大扫除，大家一边收拾教室，一边把黑板写满祝福。\"}",
+    "created_at": "2026-04-24T12:47:26.091Z"
+  },
+  {
+    "category": "memories",
+    "data": "{\"name\":\"语文课代表\",\"text\":\"高三的早读声、同桌递来的草稿纸、月考后的互相安慰，都值得被记住。\"}",
+    "created_at": "2026-04-24T12:47:26.092Z"
+  },
+  {
+    "category": "messages",
+    "data": "{\"name\":\"老同学\",\"text\":\"我现在在上海工作，十年聚会如果定在暑假，大概率可以参加。\"}",
+    "created_at": "2026-04-24T12:47:26.092Z"
+  },
+  {
+    "category": "history",
+    "data": "{\"date\":\"2022-09\",\"title\":\"开学与军训\",\"text\":\"第一次集合、第一次点名，班级故事从这里开始。\"}",
+    "created_at": "2026-04-24T12:47:26.092Z"
+  },
+  {
+    "category": "history",
+    "data": "{\"date\":\"2023-10\",\"title\":\"运动会总分突破\",\"text\":\"接力、跳高、长跑和后勤组一起撑起了那次高光时刻。\"}",
+    "created_at": "2026-04-24T12:47:26.092Z"
+  },
+  {
+    "category": "history",
+    "data": "{\"date\":\"2024-12\",\"title\":\"最后一次元旦晚会\",\"text\":\"节目、掌声和合唱让教室变成临时舞台。\"}",
+    "created_at": "2026-04-24T12:47:26.092Z"
+  },
+  {
+    "category": "history",
+    "data": "{\"date\":\"2025-06\",\"title\":\"毕业合影\",\"text\":\"照片定格了那天的阳光，也定格了每个人的高中模样。\"}",
+    "created_at": "2026-04-24T12:47:26.092Z"
+  },
+  {
+    "category": "news",
+    "data": "{\"date\":\"2026-05-01\",\"title\":\"十年聚会意向征集\",\"text\":\"请同学们在留言板留下所在城市和可参加时间，班委将汇总后确定地点。\"}",
+    "created_at": "2026-04-24T12:47:26.092Z"
+  },
+  {
+    "category": "news",
+    "data": "{\"date\":\"2026-04-20\",\"title\":\"毕业照电子版整理中\",\"text\":\"如果你手里有高清活动照片，可以发给资料组统一归档。\"}",
+    "created_at": "2026-04-24T12:47:26.092Z"
+  },
+  {
+    "category": "news",
+    "data": "{\"date\":\"2026-04-12\",\"title\":\"班级通讯录更新\",\"text\":\"请确认自己的邮箱、城市和常用联系方式，便于后续活动通知。\"}",
+    "created_at": "2026-04-24T12:47:26.092Z"
+  },
+  {
+    "category": "activities",
+    "data": "{\"tag\":\"运动会\",\"title\":\"接力赛后的拥抱\",\"text\":\"不只是名次，更是一起跑完、一起喊到嗓子沙哑的下午。\",\"image\":\"https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80\"}",
+    "created_at": "2026-04-24T12:47:26.092Z"
+  },
+  {
+    "category": "activities",
+    "data": "{\"tag\":\"元旦晚会\",\"title\":\"教室里的小舞台\",\"text\":\"把课桌推到两边之后，整个教室都像临时搭起来的剧场。\",\"image\":\"https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=900&q=80\"}",
+    "created_at": "2026-04-24T12:47:26.092Z"
+  },
+  {
+    "category": "activities",
+    "data": "{\"tag\":\"毕业旅行\",\"title\":\"出发那天的晴天\",\"text\":\"有人拍照，有人整理零食，车刚开动，笑声就已经坐满了整排座位。\",\"image\":\"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80\"}",
+    "created_at": "2026-04-24T12:47:26.092Z"
+  },
+  {
+    "category": "photos",
+    "data": "{\"name\":\"高2022级15班\",\"caption\":\"高2022级15班全班合影，属于大家的第一张首页主图。\",\"image\":\"assets/class-photo.jpg\"}",
+    "created_at": "2026-04-24T12:47:26.092Z"
+  },
+  {
+    "category": "photos",
+    "data": "{\"name\":\"资料组\",\"caption\":\"高2022级15班曾饭指南，全班同学升学去向纪念图。\",\"image\":\"assets/class-destination-map.jpg\"}",
+    "created_at": "2026-04-24T12:47:26.092Z"
+  },
+  {
+    "category": "messages",
+    "data": "{\"name\":\"test\",\"text\":\"hello world\"}",
+    "created_at": "2026-04-24T12:48:35.214Z",
+    "id": "4e5e12736ce8c0f2"
+  }
+]

@@ -4,19 +4,15 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
-const admin = require("firebase-admin");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// ── 环境变量 ──
 const ACCESS_PASSWORD = process.env.ACCESS_PASSWORD || "152025";
 const SECRET_KEY = process.env.SECRET_KEY || "class-memory-secret-key-change-me";
 const ALLOWED_EXTENSIONS = ["png", "jpg", "jpeg", "gif", "webp"];
 const CATEGORIES = ["members", "activities", "photos", "memories", "news", "history", "messages"];
 
-// ── Firebase 初始化 ──
-let db;
 const DATA_FILE = path.join(__dirname, "data.json");
 
 function loadLocalData() {
@@ -28,39 +24,29 @@ function saveLocalData(items) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(items, null, 2), "utf8");
 }
 
-// 种子数据
 const SEED_DATA = [
-  { category: "memories", data: '{"name":"班长","text":"最难忘的是毕业前最后一次大扫除，大家一边收拾教室，一边把黑板写满祝福。"}', createdAt: new Date().toISOString() },
-  { category: "memories", data: '{"name":"语文课代表","text":"高三的早读声、同桌递来的草稿纸、月考后的互相安慰，都值得被记住。"}', createdAt: new Date().toISOString() },
-  { category: "messages", data: '{"name":"老同学","text":"我现在在上海工作，十年聚会如果定在暑假，大概率可以参加。"}', createdAt: new Date().toISOString() },
-  { category: "history", data: '{"date":"2022-09","title":"开学与军训","text":"第一次集合、第一次点名，班级故事从这里开始。"}', createdAt: new Date().toISOString() },
-  { category: "history", data: '{"date":"2023-10","title":"运动会总分突破","text":"接力、跳高、长跑和后勤组一起撑起了那次高光时刻。"}', createdAt: new Date().toISOString() },
-  { category: "history", data: '{"date":"2024-12","title":"最后一次元旦晚会","text":"节目、掌声和合唱让教室变成临时舞台。"}', createdAt: new Date().toISOString() },
-  { category: "history", data: '{"date":"2025-06","title":"毕业合影","text":"照片定格了那天的阳光，也定格了每个人的高中模样。"}', createdAt: new Date().toISOString() },
-  { category: "news", data: '{"date":"2026-05-01","title":"十年聚会意向征集","text":"请同学们在留言板留下所在城市和可参加时间，班委将汇总后确定地点。"}', createdAt: new Date().toISOString() },
-  { category: "news", data: '{"date":"2026-04-20","title":"毕业照电子版整理中","text":"如果你手里有高清活动照片，可以发给资料组统一归档。"}', createdAt: new Date().toISOString() },
-  { category: "news", data: '{"date":"2026-04-12","title":"班级通讯录更新","text":"请确认自己的邮箱、城市和常用联系方式，便于后续活动通知。"}', createdAt: new Date().toISOString() },
-  { category: "activities", data: '{"tag":"运动会","title":"接力赛后的拥抱","text":"不只是名次，更是一起跑完、一起喊到嗓子沙哑的下午。","image":"https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80"}', createdAt: new Date().toISOString() },
-  { category: "activities", data: '{"tag":"元旦晚会","title":"教室里的小舞台","text":"把课桌推到两边之后，整个教室都像临时搭起来的剧场。","image":"https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=900&q=80"}', createdAt: new Date().toISOString() },
-  { category: "activities", data: '{"tag":"毕业旅行","title":"出发那天的晴天","text":"有人拍照，有人整理零食，车刚开动，笑声就已经坐满了整排座位。","image":"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80"}', createdAt: new Date().toISOString() },
-  { category: "photos", data: '{"name":"高2022级15班","caption":"高2022级15班全班合影，属于大家的第一张首页主图。","image":"assets/class-photo.jpg"}', createdAt: new Date().toISOString() },
-  { category: "photos", data: '{"name":"资料组","caption":"高2022级15班曾饭指南，全班同学升学去向纪念图。","image":"assets/class-destination-map.jpg"}', createdAt: new Date().toISOString() }
+  { category: "memories", data: '{"name":"班长","text":"最难忘的是毕业前最后一次大扫除，大家一边收拾教室，一边把黑板写满祝福。"}', created_at: new Date().toISOString() },
+  { category: "memories", data: '{"name":"语文课代表","text":"高三的早读声、同桌递来的草稿纸、月考后的互相安慰，都值得被记住。"}', created_at: new Date().toISOString() },
+  { category: "messages", data: '{"name":"老同学","text":"我现在在上海工作，十年聚会如果定在暑假，大概率可以参加。"}', created_at: new Date().toISOString() },
+  { category: "history", data: '{"date":"2022-09","title":"开学与军训","text":"第一次集合、第一次点名，班级故事从这里开始。"}', created_at: new Date().toISOString() },
+  { category: "history", data: '{"date":"2023-10","title":"运动会总分突破","text":"接力、跳高、长跑和后勤组一起撑起了那次高光时刻。"}', created_at: new Date().toISOString() },
+  { category: "history", data: '{"date":"2024-12","title":"最后一次元旦晚会","text":"节目、掌声和合唱让教室变成临时舞台。"}', created_at: new Date().toISOString() },
+  { category: "history", data: '{"date":"2025-06","title":"毕业合影","text":"照片定格了那天的阳光，也定格了每个人的高中模样。"}', created_at: new Date().toISOString() },
+  { category: "news", data: '{"date":"2026-05-01","title":"十年聚会意向征集","text":"请同学们在留言板留下所在城市和可参加时间，班委将汇总后确定地点。"}', created_at: new Date().toISOString() },
+  { category: "news", data: '{"date":"2026-04-20","title":"毕业照电子版整理中","text":"如果你手里有高清活动照片，可以发给资料组统一归档。"}', created_at: new Date().toISOString() },
+  { category: "news", data: '{"date":"2026-04-12","title":"班级通讯录更新","text":"请确认自己的邮箱、城市和常用联系方式，便于后续活动通知。"}', created_at: new Date().toISOString() },
+  { category: "activities", data: '{"tag":"运动会","title":"接力赛后的拥抱","text":"不只是名次，更是一起跑完、一起喊到嗓子沙哑的下午。","image":"https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80"}', created_at: new Date().toISOString() },
+  { category: "activities", data: '{"tag":"元旦晚会","title":"教室里的小舞台","text":"把课桌推到两边之后，整个教室都像临时搭起来的剧场。","image":"https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=900&q=80"}', created_at: new Date().toISOString() },
+  { category: "activities", data: '{"tag":"毕业旅行","title":"出发那天的晴天","text":"有人拍照，有人整理零食，车刚开动，笑声就已经坐满了整排座位。","image":"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80"}', created_at: new Date().toISOString() },
+  { category: "photos", data: '{"name":"高2022级15班","caption":"高2022级15班全班合影，属于大家的第一张首页主图。","image":"assets/class-photo.jpg"}', created_at: new Date().toISOString() },
+  { category: "photos", data: '{"name":"资料组","caption":"高2022级15班曾饭指南，全班同学升学去向纪念图。","image":"assets/class-destination-map.jpg"}', created_at: new Date().toISOString() }
 ];
 
-if (process.env.FIREBASE_SERVICE_ACCOUNT) {
-  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-  admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
-  db = admin.firestore();
-  console.log("[OK] Firebase Firestore 已连接");
-} else {
-  console.log("[!] 未设置 FIREBASE_SERVICE_ACCOUNT，使用 data.json 文件存储");
-  if (!fs.existsSync(DATA_FILE)) {
-    saveLocalData(SEED_DATA);
-    console.log("[OK] 已创建 data.json 并写入种子数据");
-  }
+if (!fs.existsSync(DATA_FILE)) {
+  saveLocalData(SEED_DATA);
+  console.log("[OK] 已创建 data.json 并写入种子数据");
 }
 
-// ── 文件上传配置 ──
 const UPLOAD_DIR = path.join(__dirname, "uploads");
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 
@@ -83,7 +69,6 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }
 });
 
-// ── 中间件 ──
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
@@ -93,7 +78,6 @@ app.use(session({
   cookie: { maxAge: 24 * 60 * 60 * 1000, httpOnly: true, sameSite: "lax" }
 }));
 
-// CORS：开发时允许 Netlify 前端访问
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   if (origin && (origin.startsWith("http://localhost") || origin.includes("netlify.app"))) {
@@ -106,18 +90,14 @@ app.use((req, res, next) => {
   next();
 });
 
-// ── 静态文件（本地开发用） ──
 app.use(express.static(__dirname));
 
-// ── 认证中间件 ──
 function loginRequired(req, res, next) {
   if (!req.session.authenticated) {
     return res.status(401).json({ error: "请先输入访问密码" });
   }
   next();
 }
-
-// ── 认证 API ──
 
 app.post("/api/login", (req, res) => {
   const { password } = req.body || {};
@@ -139,49 +119,23 @@ app.post("/api/logout", (req, res) => {
 
 // ── 数据操作 ──
 
-async function getItems(category) {
-  if (db) {
-    const snap = await db.collection("items")
-      .where("category", "==", category)
-      .orderBy("createdAt", "desc")
-      .get();
-    return snap.docs.map(doc => {
-      const d = doc.data();
-      return { ...JSON.parse(d.data), id: doc.id, created_at: d.createdAt };
-    });
-  }
+function getItems(category) {
   const all = loadLocalData();
   return all
     .filter(item => item.category === category)
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .map(item => ({ ...JSON.parse(item.data), id: item.id, created_at: item.createdAt }));
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+    .map(item => ({ ...JSON.parse(item.data), id: item.id, created_at: item.created_at }));
 }
 
-async function addItem(category, data) {
-  const payload = {
-    category,
-    data: JSON.stringify(data),
-    createdAt: new Date().toISOString()
-  };
-  if (db) {
-    const docRef = await db.collection("items").add(payload);
-    return docRef.id;
-  }
+function addItem(category, data) {
   const all = loadLocalData();
-  payload.id = crypto.randomBytes(8).toString("hex");
+  const payload = { category, data: JSON.stringify(data), created_at: new Date().toISOString(), id: crypto.randomBytes(8).toString("hex") };
   all.push(payload);
   saveLocalData(all);
   return payload.id;
 }
 
-async function updateItem(category, id, data) {
-  if (db) {
-    const docRef = db.collection("items").doc(id);
-    const doc = await docRef.get();
-    if (!doc.exists || doc.data().category !== category) return false;
-    await docRef.update({ data: JSON.stringify(data) });
-    return true;
-  }
+function updateItem(category, id, data) {
   const all = loadLocalData();
   const idx = all.findIndex(item => item.id === id && item.category === category);
   if (idx === -1) return false;
@@ -190,14 +144,7 @@ async function updateItem(category, id, data) {
   return true;
 }
 
-async function deleteItem(category, id) {
-  if (db) {
-    const docRef = db.collection("items").doc(id);
-    const doc = await docRef.get();
-    if (!doc.exists || doc.data().category !== category) return false;
-    await docRef.delete();
-    return true;
-  }
+function deleteItem(category, id) {
   const all = loadLocalData();
   const idx = all.findIndex(item => item.id === id && item.category === category);
   if (idx === -1) return false;
@@ -208,13 +155,13 @@ async function deleteItem(category, id) {
 
 // ── CRUD API ──
 
-app.get("/api/:category", loginRequired, async (req, res) => {
+app.get("/api/:category", loginRequired, (req, res) => {
   const { category } = req.params;
   if (!CATEGORIES.includes(category)) {
     return res.status(404).json({ error: "unknown category" });
   }
   try {
-    const items = await getItems(category);
+    const items = getItems(category);
     res.json(items);
   } catch (err) {
     console.error("getItems error:", err);
@@ -222,7 +169,7 @@ app.get("/api/:category", loginRequired, async (req, res) => {
   }
 });
 
-app.post("/api/:category", loginRequired, async (req, res) => {
+app.post("/api/:category", loginRequired, (req, res) => {
   const { category } = req.params;
   if (!CATEGORIES.includes(category)) {
     return res.status(404).json({ error: "unknown category" });
@@ -232,7 +179,7 @@ app.post("/api/:category", loginRequired, async (req, res) => {
     return res.status(400).json({ error: "无效的数据" });
   }
   try {
-    await addItem(category, data);
+    addItem(category, data);
     res.status(201).json({ ok: true });
   } catch (err) {
     console.error("addItem error:", err);
@@ -240,7 +187,7 @@ app.post("/api/:category", loginRequired, async (req, res) => {
   }
 });
 
-app.put("/api/:category/:id", loginRequired, async (req, res) => {
+app.put("/api/:category/:id", loginRequired, (req, res) => {
   const { category, id } = req.params;
   if (!CATEGORIES.includes(category)) {
     return res.status(404).json({ error: "unknown category" });
@@ -250,8 +197,7 @@ app.put("/api/:category/:id", loginRequired, async (req, res) => {
     return res.status(400).json({ error: "无效的数据" });
   }
   try {
-    const ok = await updateItem(category, id, data);
-    if (!ok) return res.status(404).json({ error: "未找到该条目" });
+    updateItem(category, id, data);
     res.json({ ok: true });
   } catch (err) {
     console.error("updateItem error:", err);
@@ -259,14 +205,13 @@ app.put("/api/:category/:id", loginRequired, async (req, res) => {
   }
 });
 
-app.delete("/api/:category/:id", loginRequired, async (req, res) => {
+app.delete("/api/:category/:id", loginRequired, (req, res) => {
   const { category, id } = req.params;
   if (!CATEGORIES.includes(category)) {
     return res.status(404).json({ error: "unknown category" });
   }
   try {
-    const ok = await deleteItem(category, id);
-    if (!ok) return res.status(404).json({ error: "未找到该条目" });
+    deleteItem(category, id);
     res.json({ ok: true });
   } catch (err) {
     console.error("deleteItem error:", err);
@@ -276,19 +221,11 @@ app.delete("/api/:category/:id", loginRequired, async (req, res) => {
 
 // ── 种子数据 API ──
 
-app.post("/api/seed", loginRequired, async (req, res) => {
+app.post("/api/seed", loginRequired, (req, res) => {
   try {
-    if (db) {
-      const snap = await db.collection("items").limit(1).get();
-      if (!snap.empty) return res.json({ ok: true, message: "已有数据" });
-      for (const item of SEED_DATA) {
-        await db.collection("items").add({
-          category: item.category,
-          data: item.data,
-          createdAt: new Date().toISOString()
-        });
-      }
-    }
+    const existing = loadLocalData();
+    if (existing.length > 0) return res.json({ ok: true, message: "已有数据" });
+    saveLocalData(SEED_DATA);
     res.json({ ok: true });
   } catch (err) {
     console.error("seed error:", err);
@@ -336,14 +273,10 @@ app.listen(PORT, "0.0.0.0", () => {
   console.log(`  本机访问:     http://localhost:${PORT}`);
   console.log(`  访问密码:     ${ACCESS_PASSWORD}`);
   console.log("-".repeat(56));
-  console.log("  后端部署:     Render");
   console.log("  前端部署:     Netlify");
-  console.log("  数据库:       Firebase Firestore");
+  console.log("  后端部署:     Render");
+  console.log("  数据库:       Supabase (PostgreSQL)");
+  console.log("  Supabase:     前端通过匿名 key 直连读取");
+  console.log("  后端:         data.json 兜底 + 密码验证 + 文件上传");
   console.log("=".repeat(56));
-  if (!db) {
-    console.log("");
-    console.log("  [本地模式] 数据存储在 data.json 文件中");
-    console.log("  [部署到 Render] 需设置环境变量 FIREBASE_SERVICE_ACCOUNT");
-    console.log("=".repeat(56));
-  }
 });
