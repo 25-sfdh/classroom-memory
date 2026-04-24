@@ -30,7 +30,13 @@ async function supabaseFetch(url, options = {}) {
     const text = await res.text().catch(() => "");
     throw new Error(`Supabase ${res.status}: ${text}`);
   }
-  return res.json();
+  const text = await res.text().catch(() => "");
+  if (!text) return null;
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
 }
 
 // ── Supabase Storage 图片上传 ──
@@ -114,11 +120,12 @@ async function fetchList(category) {
 async function createItem(category, data) {
   if (SUPABASE_TABLES.includes(category)) {
     const body = buildSupabaseRow(category, data);
-    await supabaseFetch(`${SUPABASE_URL}/rest/v1/${category}`, {
+    const result = await supabaseFetch(`${SUPABASE_URL}/rest/v1/${category}`, {
       method: "POST",
+      headers: { Prefer: "return=representation" },
       body: JSON.stringify(body)
     });
-    return { ok: true };
+    return { ok: true, data: result };
   }
   return api("POST", `/api/${category}`, data);
 }
