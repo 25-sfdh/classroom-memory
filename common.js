@@ -1,19 +1,30 @@
-// ── 部署配置 ──
-// 本地开发时留空（同源），部署到 Netlify 后改为 Render 后端地址
-const API_BASE = (function () {
-  const host = window.location.hostname;
-  if (host === "localhost" || host === "127.0.0.1") {
-    return "";
-  }
-  const apiUrl = localStorage.getItem("api_base_url");
-  if (apiUrl) return apiUrl.replace(/\/+$/, "");
-  return "https://YOUR_APP_NAME.onrender.com";
-})();
-
-// ── Supabase 前端直连（匿名 key，安全用于客户端） ──
+// ── Supabase 前端直连 ──
 
 const SUPABASE_URL = "https://emonrzvnfgqzlnsmewpy.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_uOKwXc5ZP7O3qkRMbOl8tA_sCvNm2z6";
+const SUPABASE_TABLES = ["members", "messages", "news", "photos"];
+
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const STORAGE_BUCKET = "class-uploads";
+
+// ── supabase-js 客户端（动态 CDN 导入，不依赖构建工具） ──
+
+let _supabaseClient = null;
+
+async function getSupabase() {
+  if (_supabaseClient) return _supabaseClient;
+  try {
+    const { createClient } = await import("https://esm.sh/@supabase/supabase-js@2.49.4");
+    _supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    return _supabaseClient;
+  } catch (e) {
+    console.warn("supabase-js CDN 加载失败，使用 REST 备用模式", e.message);
+    return null;
+  }
+}
+
+// ── Supabase REST 备用（当 supabase-js 不可用时降级） ──
 
 async function supabaseFetch(url, options = {}) {
   const res = await fetch(url, {
@@ -34,16 +45,124 @@ async function supabaseFetch(url, options = {}) {
   if (!text) return null;
   try {
     return JSON.parse(text);
-  } catch {
-    return text;
+  } catch (e) {
+    return null;
   }
 }
 
-// ── Supabase Storage 图片上传 ──
+// ── 数据读取：优先 supabase-js，降级 REST ──
 
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const STORAGE_BUCKET = "class-uploads";
+function toDateStr(iso) {
+  return iso ? iso.split("T")[0] : iso;
+}
+
+function mapSupabaseRow(category, row) {
+  switch (category) {
+    case "messages":
+      return { name: row.name, text: row.content, date: toDateStr(row.created_at), id: row.id, created_at: row.created_at };
+    case "members":
+      return { name: row.name, photo: row.avatar_url, note: row.bio, id: row.id, created_at: row.created_at };
+    case "photos":
+      return { name: row.title, image: row.image_url, caption: row.description, date: toDateStr(row.created_at), id: row.id, created_at: row.created_at };
+    case "news":
+      return { title: row.title, text: row.content, date: toDateStr(row.created_at), id: row.id, created_at: row.created_at };
+    default:
+      return row;
+  }
+}
+
+async function fetchList(category) {
+  if (!SUPABASE_TABLES.includes(category)) return [];
+  try {
+    const supabase = await getSupabase();
+    if (supabase) {
+      const { data, error } = await supabase
+        .from(category)
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      if (data && data.length > 0) return data.map(row => mapSupabaseRow(category, row));
+      return [];
+    }
+  } catch (e) {
+    console.warn("supabase-js 读取失败，尝试 REST:", e.message);
+  }
+  try {
+    const data = await supabaseFetch(`${SUPABASE_URL}/rest/v1/${category}?select=*&order=created_at.desc`);
+    if (data && data.length > 0) return data.map(row => mapSupabaseRow(category, row));
+    return [];
+  } catch (e) {
+    console.warn("REST 读取也失败:", e.message);
+    return [];
+  }
+}
+
+// ── 新增数据：优先 supabase-js .insert().select()，降级 REST ──
+
+async function createItem(category, data) {
+  if (!SUPABASE_TABLES.includes(category)) return { ok: false };
+  const body = buildSupabaseRow(category, data);
+  try {
+    const supabase = await getSupabase();
+    if (supabase) {
+      const { data: inserted, error } = await supabase
+        .from(category)
+        .insert(body)
+        .select()
+        .maybeSingle();
+      if (error) throw error;
+      return { ok: true, data: inserted || null };
+    }
+  } catch (e) {
+    console.warn("supabase-js 写入失败，尝试 REST:", e.message);
+  }
+  const result = await supabaseFetch(`${SUPABASE_URL}/rest/v1/${category}`, {
+    method: "POST",
+    headers: { Prefer: "return=representation" },
+    body: JSON.stringify(body)
+  });
+  return { ok: true, data: result };
+}
+
+function buildSupabaseRow(category, data) {
+  const now = new Date().toISOString();
+  switch (category) {
+    case "messages":
+      return { name: data.name, content: data.text, created_at: now };
+    case "members":
+      return { name: data.name, role: data.role || "", bio: data.note || "", avatar_url: data.photo || "", created_at: now };
+    case "news":
+      return { title: data.title, content: data.text || "", created_at: now };
+    case "photos":
+      return { title: data.name, image_url: data.image || "", description: data.caption || "", created_at: now };
+    default:
+      return { ...data, created_at: now };
+  }
+}
+
+async function updateItem(category, id, data) {
+  return fetch(`${SUPABASE_URL}/rest/v1/${category}?id=eq.${id}`, {
+    method: "PATCH",
+    headers: {
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  }).then(r => r.ok ? { ok: true } : r.text().then(t => { throw new Error(t); }));
+}
+
+async function deleteItem(category, id) {
+  return fetch(`${SUPABASE_URL}/rest/v1/${category}?id=eq.${id}`, {
+    method: "DELETE",
+    headers: {
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+    }
+  }).then(r => r.ok ? { ok: true } : r.text().then(t => { throw new Error(t); }));
+}
+
+// ── Supabase Storage 图片上传 ──
 
 async function supabaseUpload(file, folder = "uploads") {
   if (!ALLOWED_TYPES.includes(file.type)) {
@@ -75,86 +194,8 @@ async function supabaseUpload(file, folder = "uploads") {
   return `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${filePath}`;
 }
 
-// ── 数据读取：优先 Supabase，失败后 API 兜底 ──
+// ── 工具函数 ──
 
-const SUPABASE_TABLES = ["members", "messages", "news", "photos"];
-
-function toDateStr(iso) {
-  return iso ? iso.split("T")[0] : iso;
-}
-
-function mapSupabaseRow(category, row) {
-  switch (category) {
-    case "messages":
-      return { name: row.name, text: row.content, date: toDateStr(row.created_at), id: row.id, created_at: row.created_at };
-    case "members":
-      return { name: row.name, photo: row.avatar_url, note: row.bio, id: row.id, created_at: row.created_at };
-    case "photos":
-      return { name: row.title, image: row.image_url, caption: row.description, date: toDateStr(row.created_at), id: row.id, created_at: row.created_at };
-    case "news":
-      return { title: row.title, text: row.content, date: toDateStr(row.created_at), id: row.id, created_at: row.created_at };
-    default:
-      return row;
-  }
-}
-
-async function fetchList(category) {
-  if (SUPABASE_TABLES.includes(category)) {
-    try {
-      const url = `${SUPABASE_URL}/rest/v1/${category}?select=*&order=created_at.desc`;
-      const data = await supabaseFetch(url);
-      if (data && data.length > 0) {
-        return data.map(row => mapSupabaseRow(category, row));
-      }
-      return [];
-    } catch (e) {
-      console.warn("Supabase 读取失败:", e.message);
-      return [];
-    }
-  }
-  return api("GET", `/api/${category}`);
-}
-
-// ── 新增数据：直写 Supabase（4 张表），出错直接抛出真实错误 ──
-
-async function createItem(category, data) {
-  if (SUPABASE_TABLES.includes(category)) {
-    const body = buildSupabaseRow(category, data);
-    const result = await supabaseFetch(`${SUPABASE_URL}/rest/v1/${category}`, {
-      method: "POST",
-      headers: { Prefer: "return=representation" },
-      body: JSON.stringify(body)
-    });
-    return { ok: true, data: result };
-  }
-  return api("POST", `/api/${category}`, data);
-}
-
-function buildSupabaseRow(category, data) {
-  const now = new Date().toISOString();
-  switch (category) {
-    case "messages":
-      return { name: data.name, content: data.text, created_at: now };
-    case "members":
-      return { name: data.name, role: data.role || "", bio: data.note || "", avatar_url: data.photo || "", created_at: now };
-    case "news":
-      return { title: data.title, content: data.text || "", created_at: now };
-    case "photos":
-      return { title: data.name, image_url: data.image || "", description: data.caption || "", created_at: now };
-    default:
-      return { ...data, created_at: now };
-  }
-}
-
-async function updateItem(category, id, data) {
-  return api("PUT", `/api/${category}/${id}`, data);
-}
-
-async function deleteItem(category, id) {
-  return api("DELETE", `/api/${category}/${id}`);
-}
-
-let uploadedFile = null;
 const domCache = new Map();
 
 function getCachedElement(id) {
@@ -163,104 +204,6 @@ function getCachedElement(id) {
   }
   return domCache.get(id);
 }
-
-// ── 后端 API（密码验证、后台管理、上传） ──
-
-async function api(method, path, body) {
-  const opts = { method, headers: {}, credentials: "include" };
-  if (body instanceof FormData) {
-    opts.body = body;
-  } else if (body !== undefined) {
-    opts.headers["Content-Type"] = "application/json";
-    opts.body = JSON.stringify(body);
-  }
-  const url = API_BASE + path;
-  const res = await fetch(url, opts);
-  if (res.status === 401) {
-    showPasswordGate();
-    throw new Error("登录已过期，请重新输入密码");
-  }
-  return res.json();
-}
-
-async function uploadImage(file) {
-  const fd = new FormData();
-  fd.append("file", file);
-  return api("POST", "/api/upload", fd);
-}
-
-async function uploadImageFromDataUrl(dataUrl, filename = "upload.jpg") {
-  const blob = await fetch(dataUrl).then(r => r.blob());
-  const file = new File([blob], filename, { type: "image/jpeg" });
-  return uploadImage(file);
-}
-
-// ── 密码门禁 ──
-
-let gateVisible = false;
-
-async function checkAuth() {
-  const data = await api("GET", "/api/check-auth");
-  return data.authenticated === true;
-}
-
-function showPasswordGate() {
-  const gate = getCachedElement("password-gate");
-  const error = getCachedElement("password-error");
-  if (gate && !gate.classList.contains("is-visible")) {
-    gate.classList.add("is-visible");
-    document.body.classList.add("locked");
-    gateVisible = true;
-    if (error) error.textContent = "";
-  }
-}
-
-function hidePasswordGate() {
-  const gate = getCachedElement("password-gate");
-  if (gate) {
-    gate.classList.remove("is-visible");
-    document.body.classList.remove("locked");
-    gateVisible = false;
-  }
-  const toggle = document.querySelector(".nav-toggle");
-  if (toggle) toggle.style.display = "";
-}
-
-async function setupPasswordGate() {
-  const gate = getCachedElement("password-gate");
-  const form = getCachedElement("password-form");
-  const input = getCachedElement("password-input");
-  const error = getCachedElement("password-error");
-
-  if (!gate || !form || !input || !error) return;
-
-  const authenticated = await checkAuth();
-  if (authenticated) {
-    gate.classList.remove("is-visible");
-    document.body.classList.remove("locked");
-    return;
-  }
-
-  showPasswordGate();
-
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    try {
-      const result = await api("POST", "/api/login", { password: input.value });
-      if (result.ok) {
-        hidePasswordGate();
-        error.textContent = "";
-        form.reset();
-        location.reload();
-      }
-    } catch {
-      error.textContent = "密码不对，请再试一次。";
-      input.select();
-    }
-  });
-}
-
-// ── 工具函数 ──
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (char) => {
@@ -344,7 +287,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-
-// ── 初始化 ──
-
-setupPasswordGate();
