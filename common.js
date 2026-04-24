@@ -102,26 +102,23 @@ async function fetchList(category) {
       }
       return [];
     } catch (e) {
-      console.warn("Supabase 读取失败，使用后端 API 兜底", e.message);
+      console.warn("Supabase 读取失败:", e.message);
+      return [];
     }
   }
   return api("GET", `/api/${category}`);
 }
 
-// ── 新增数据：优先写入 Supabase（所有 4 张表），失败后 API 兜底 ──
+// ── 新增数据：直写 Supabase（4 张表），出错直接抛出真实错误 ──
 
 async function createItem(category, data) {
   if (SUPABASE_TABLES.includes(category)) {
-    try {
-      const body = buildSupabaseRow(category, data);
-      await supabaseFetch(`${SUPABASE_URL}/rest/v1/${category}`, {
-        method: "POST",
-        body: JSON.stringify(body)
-      });
-      return { ok: true };
-    } catch (e) {
-      console.warn(`Supabase 写入 ${category} 失败，使用后端 API 兜底`, e.message);
-    }
+    const body = buildSupabaseRow(category, data);
+    await supabaseFetch(`${SUPABASE_URL}/rest/v1/${category}`, {
+      method: "POST",
+      body: JSON.stringify(body)
+    });
+    return { ok: true };
   }
   return api("POST", `/api/${category}`, data);
 }
