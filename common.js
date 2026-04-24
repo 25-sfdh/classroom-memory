@@ -65,7 +65,7 @@ function mapSupabaseRow(category, row) {
     case "photos":
       return { name: row.title, image: row.image_url, caption: row.description, date: toDateStr(row.created_at), id: row.id, created_at: row.created_at };
     case "news":
-      return { title: row.title, text: row.content, date: toDateStr(row.created_at), id: row.id, created_at: row.created_at };
+      return { title: row.title, text: row.content, date: row.date || toDateStr(row.created_at), id: row.id, created_at: row.created_at };
     case "activities":
       return { tag: row.tag, title: row.title, text: row.content, image: row.image_url, id: row.id, created_at: row.created_at };
     case "memories":
@@ -138,7 +138,7 @@ function buildSupabaseRow(category, data) {
     case "members":
       return { name: data.name, role: data.role || "", bio: data.note || "", avatar_url: data.photo || "", created_at: now };
     case "news":
-      return { title: data.title, content: data.text || "", created_at: now };
+      return { title: data.title, date: data.date || toDateStr(now), content: data.text || "", created_at: now };
     case "photos":
       return { title: data.name, image_url: data.image || "", description: data.caption || "", created_at: now };
     case "activities":
