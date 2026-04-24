@@ -8,13 +8,16 @@ function bindMemoryForm() {
     event.preventDefault();
     const item = {
       name: nameInput.value.trim(),
-      text: textInput.value.trim(),
-      date: new Date().toLocaleDateString("zh-CN")
+      text: textInput.value.trim()
     };
     if (!item.name || !item.text) return;
-    await createItem("memories", item);
-    await renderPostsFromApi("memories", "memory-list", "还没有回忆，快来写下第一条吧。");
-    form.reset();
+    try {
+      await createItem("memories", item);
+      await renderPostsFromApi("memories", "memory-list", "还没有回忆，快来写下第一条吧。");
+      form.reset();
+    } catch (e) {
+      alert(e.message);
+    }
   });
 }
 

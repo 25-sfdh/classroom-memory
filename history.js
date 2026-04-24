@@ -29,9 +29,13 @@ function bindHistoryForm() {
       text: textInput.value.trim()
     };
     if (!item.date || !item.title || !item.text) return;
-    await createItem("history", item);
-    await renderHistory();
-    form.reset();
+    try {
+      await createItem("history", item);
+      await renderHistory();
+      form.reset();
+    } catch (e) {
+      alert(e.message);
+    }
   });
 }
 

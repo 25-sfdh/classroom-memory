@@ -2,7 +2,7 @@
 
 const SUPABASE_URL = "https://emonrzvnfgqzlnsmewpy.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_uOKwXc5ZP7O3qkRMbOl8tA_sCvNm2z6";
-const SUPABASE_TABLES = ["members", "messages", "news", "photos", "activities"];
+const SUPABASE_TABLES = ["members", "messages", "news", "photos", "activities", "memories", "history"];
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -68,6 +68,10 @@ function mapSupabaseRow(category, row) {
       return { title: row.title, text: row.content, date: toDateStr(row.created_at), id: row.id, created_at: row.created_at };
     case "activities":
       return { tag: row.tag, title: row.title, text: row.content, image: row.image_url, id: row.id, created_at: row.created_at };
+    case "memories":
+      return { name: row.name, text: row.content, date: toDateStr(row.created_at), id: row.id, created_at: row.created_at };
+    case "history":
+      return { date: row.date, title: row.title, text: row.content, id: row.id, created_at: row.created_at };
     default:
       return row;
   }
@@ -139,6 +143,10 @@ function buildSupabaseRow(category, data) {
       return { title: data.name, image_url: data.image || "", description: data.caption || "", created_at: now };
     case "activities":
       return { tag: data.tag, title: data.title, content: data.text || "", image_url: data.image || "", created_at: now };
+    case "memories":
+      return { name: data.name, content: data.text || "", created_at: now };
+    case "history":
+      return { date: data.date, title: data.title, content: data.text || "", created_at: now };
     default:
       return { ...data, created_at: now };
   }
