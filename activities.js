@@ -44,13 +44,13 @@ function bindActivityForm() {
   list.addEventListener("click", async (event) => {
     const button = event.target.closest("[data-action]");
     if (!button) return;
-    const id = Number(button.dataset.id);
+    const id = button.dataset.id;
     const activities = await fetchList("activities");
-    const item = activities.find(a => a.id === id);
+    const item = activities.find(a => String(a.id) === id);
     if (!item) return;
 
     if (button.dataset.action === "edit-activity") {
-      editIndexInput.value = String(id);
+      editIndexInput.value = String(item.id);
       tagInput.value = item.tag;
       titleInput.value = item.title;
       textInput.value = item.text;
@@ -61,8 +61,12 @@ function bindActivityForm() {
 
     if (button.dataset.action === "delete-activity") {
       if (!confirm("确定删除这条活动？")) return;
-      await deleteItem("activities", id);
-      await renderActivities();
+      try {
+        await deleteItem("activities", id);
+        await renderActivities();
+      } catch (e) {
+        alert(e.message);
+      }
     }
   });
 
@@ -71,32 +75,41 @@ function bindActivityForm() {
     const editId = editIndexInput.value;
     const tag = tagInput.value.trim();
     const title = titleInput.value.trim();
-    const text = textInput.value.trim();
-    if (!tag || !title || !text) return;
+    const content = textInput.value.trim();
+    if (!tag || !title || !content) return;
 
-    let image;
-    if (fileInput.files[0]) {
-      const uploaded = await uploadImage(fileInput.files[0]);
-      image = uploaded.url;
-    } else if (editId) {
-      const activities = await fetchList("activities");
-      const existing = activities.find(a => a.id === Number(editId));
-      image = existing ? existing.image : "uploads/class-photo.jpg";
-    } else {
-      image = "uploads/class-photo.jpg";
-    }
+    try {
+      let imageUrl;
+      if (fileInput.files[0]) {
+        imageUrl = await supabaseUpload(fileInput.files[0], "activities");
+      } else if (editId) {
+        const activities = await fetchList("activities");
+        const existing = activities.find(a => String(a.id) === editId);
+        imageUrl = existing ? existing.image : "../assets/class-photo.jpg";
+      } else {
+        imageUrl = "../assets/class-photo.jpg";
+      }
 
-    const item = { tag, title, text, image };
-    if (editId) {
-      await updateItem("activities", Number(editId), item);
-    } else {
-      await createItem("activities", item);
+      if (editId) {
+        await updateItem("activities", Number(editId), {
+          tag,
+          title,
+          content,
+          image_url: imageUrl
+        });
+      } else {
+        // createItem maps UI field names to DB columns via buildSupabaseRow
+        await createItem("activities", { tag, title, text: content, image: imageUrl });
+      }
+
+      await renderActivities();
+      form.reset();
+      editIndexInput.value = "";
+      preview.src = "../assets/class-photo.jpg";
+      submitButton.textContent = "添加活动";
+    } catch (e) {
+      alert(e.message);
     }
-    await renderActivities();
-    form.reset();
-    editIndexInput.value = "";
-    preview.src = "../assets/class-photo.jpg";
-    submitButton.textContent = "添加活动";
   });
 }
 
