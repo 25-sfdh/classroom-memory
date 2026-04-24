@@ -37,16 +37,20 @@ function bindPhotoForm() {
     const caption = captionInput.value.trim();
     if (!name || !caption || !file) return;
 
-    const uploaded = await uploadImage(file);
-    const photo = {
-      name, caption,
-      image: uploaded.url,
-      date: new Date().toLocaleDateString("zh-CN")
-    };
-    await createItem("photos", photo);
-    await renderPhotos();
-    form.reset();
-    preview.src = "../assets/class-photo.jpg";
+    try {
+      const imageUrl = await supabaseUpload(file, "photos");
+      const photo = {
+        name, caption,
+        image: imageUrl,
+        date: new Date().toLocaleDateString("zh-CN")
+      };
+      await createItem("photos", photo);
+      await renderPhotos();
+      form.reset();
+      preview.src = "../assets/class-photo.jpg";
+    } catch (e) {
+      alert(e.message);
+    }
   });
 }
 

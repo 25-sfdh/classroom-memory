@@ -29,9 +29,13 @@ function bindNewsForm() {
       text: textInput.value.trim()
     };
     if (!item.date || !item.title || !item.text) return;
-    await createItem("news", item);
-    await renderNews();
-    form.reset();
+    try {
+      await createItem("news", item);
+      await renderNews();
+      form.reset();
+    } catch (e) {
+      alert(e.message);
+    }
   });
 }
 

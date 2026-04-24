@@ -33,6 +33,42 @@ async function supabaseFetch(url, options = {}) {
   return res.json();
 }
 
+// ── Supabase Storage 图片上传 ──
+
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const STORAGE_BUCKET = "class-uploads";
+
+async function supabaseUpload(file, folder = "uploads") {
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    throw new Error("仅支持 JPG/PNG/WebP 格式");
+  }
+  if (file.size > MAX_FILE_SIZE) {
+    throw new Error("图片大小不能超过 5MB");
+  }
+
+  const ext = file.name.split(".").pop().toLowerCase();
+  const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const filePath = `${folder}/${fileName}`;
+
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${STORAGE_BUCKET}/${filePath}`, {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": file.type
+    },
+    body: file
+  });
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`图片上传失败 (${res.status}): ${text}`);
+  }
+
+  return `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${filePath}`;
+}
+
 // ── 数据读取：优先 Supabase，失败后 API 兜底 ──
 
 const SUPABASE_TABLES = ["members", "messages", "news", "photos"];
@@ -72,25 +108,38 @@ async function fetchList(category) {
   return api("GET", `/api/${category}`);
 }
 
-// ── 新增数据：消息走 Supabase，其余走后端 API（需密码） ──
+// ── 新增数据：优先写入 Supabase（所有 4 张表），失败后 API 兜底 ──
 
 async function createItem(category, data) {
-  if (category === "messages") {
+  if (SUPABASE_TABLES.includes(category)) {
     try {
-      await supabaseFetch(`${SUPABASE_URL}/rest/v1/messages`, {
+      const body = buildSupabaseRow(category, data);
+      await supabaseFetch(`${SUPABASE_URL}/rest/v1/${category}`, {
         method: "POST",
-        body: JSON.stringify({
-          name: data.name,
-          content: data.text,
-          created_at: new Date().toISOString()
-        })
+        body: JSON.stringify(body)
       });
       return { ok: true };
     } catch (e) {
-      console.warn("Supabase 写入失败，使用后端 API 兜底", e.message);
+      console.warn(`Supabase 写入 ${category} 失败，使用后端 API 兜底`, e.message);
     }
   }
   return api("POST", `/api/${category}`, data);
+}
+
+function buildSupabaseRow(category, data) {
+  const now = new Date().toISOString();
+  switch (category) {
+    case "messages":
+      return { name: data.name, content: data.text, created_at: now };
+    case "members":
+      return { name: data.name, role: data.role || "", bio: data.note || "", avatar_url: data.photo || "", created_at: now };
+    case "news":
+      return { title: data.title, content: data.text || "", created_at: now };
+    case "photos":
+      return { title: data.name, image_url: data.image || "", description: data.caption || "", created_at: now };
+    default:
+      return { ...data, created_at: now };
+  }
 }
 
 async function updateItem(category, id, data) {

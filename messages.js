@@ -12,9 +12,13 @@ function bindMessageForm() {
       date: new Date().toLocaleDateString("zh-CN")
     };
     if (!item.name || !item.text) return;
-    await createItem("messages", item);
-    await renderPostsFromApi("messages", "message-list", "还没有留言，快来说点什么吧。");
-    form.reset();
+    try {
+      await createItem("messages", item);
+      await renderPostsFromApi("messages", "message-list", "还没有留言，快来说点什么吧。");
+      form.reset();
+    } catch (e) {
+      alert(e.message);
+    }
   });
 }
 

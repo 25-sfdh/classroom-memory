@@ -36,12 +36,16 @@ function bindMemberForm() {
     const note = noteInput.value.trim();
     if (!name || !note || !file) return;
 
-    const uploaded = await uploadImage(file);
-    const member = { name, note, photo: uploaded.url };
-    await createItem("members", member);
-    await renderMembers();
-    form.reset();
-    preview.src = "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80";
+    try {
+      const photoUrl = await supabaseUpload(file, "members");
+      const member = { name, note, photo: photoUrl };
+      await createItem("members", member);
+      await renderMembers();
+      form.reset();
+      preview.src = "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80";
+    } catch (e) {
+      alert(e.message);
+    }
   });
 }
 
