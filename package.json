@@ -1,0 +1,16 @@
+{
+  "name": "classroom-memory",
+  "version": "1.0.0",
+  "description": "高2022级15班回忆馆 - Node.js 后端",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "express-session": "^1.18.0",
+    "multer": "^1.4.5-lts.1",
+    "firebase-admin": "^12.0.0"
+  }
+}

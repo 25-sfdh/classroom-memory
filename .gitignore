@@ -1,0 +1,10 @@
+node_modules/
+uploads/
+classroom.db
+*.py
+venv/
+__pycache__/
+.env
+.git/
+ngrok.exe
+*.bat
