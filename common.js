@@ -22,6 +22,7 @@ async function supabaseFetch(url, options = {}) {
       "apikey": SUPABASE_ANON_KEY,
       "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
       "Content-Type": "application/json",
+      "Accept": "application/json",
       ...options.headers
     }
   });
@@ -36,16 +37,20 @@ async function supabaseFetch(url, options = {}) {
 
 const SUPABASE_TABLES = ["members", "messages", "news", "photos"];
 
+function toDateStr(iso) {
+  return iso ? iso.split("T")[0] : iso;
+}
+
 function mapSupabaseRow(category, row) {
   switch (category) {
     case "messages":
-      return { name: row.name, text: row.content, date: row.created_at, id: row.id, created_at: row.created_at };
+      return { name: row.name, text: row.content, date: toDateStr(row.created_at), id: row.id, created_at: row.created_at };
     case "members":
       return { name: row.name, photo: row.avatar_url, note: row.bio, id: row.id, created_at: row.created_at };
     case "photos":
-      return { name: row.title, image: row.image_url, caption: row.description, date: row.created_at, id: row.id, created_at: row.created_at };
+      return { name: row.title, image: row.image_url, caption: row.description, date: toDateStr(row.created_at), id: row.id, created_at: row.created_at };
     case "news":
-      return { title: row.title, text: row.content, date: row.created_at, id: row.id, created_at: row.created_at };
+      return { title: row.title, text: row.content, date: toDateStr(row.created_at), id: row.id, created_at: row.created_at };
     default:
       return row;
   }

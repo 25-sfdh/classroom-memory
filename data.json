@@ -79,5 +79,11 @@
     "data": "{\"name\":\"test\",\"text\":\"hello world\"}",
     "created_at": "2026-04-24T12:48:35.214Z",
     "id": "4e5e12736ce8c0f2"
+  },
+  {
+    "category": "messages",
+    "data": "{\"name\":\"测试\",\"text\":\"hello from api test\"}",
+    "created_at": "2026-04-24T13:02:46.289Z",
+    "id": "8723edf5321e48cf"
   }
 ]
