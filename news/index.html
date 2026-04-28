@@ -9,7 +9,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
   <link rel="stylesheet" href="../style.css">
 </head>
-<body>
+<body class="page-news">
   <div id="password-gate" class="password-gate">
     <div class="password-card">
       <p class="eyebrow">Private Access</p>
@@ -51,13 +51,24 @@
   </header>
 
   <main id="main-content">
-    <section id="news" class="section muted" aria-labelledby="news-title">
+    <section class="page-hero" aria-labelledby="page-hero-title">
+      <div class="page-hero-inner">
+        <p class="eyebrow">Notice</p>
+        <h1 id="page-hero-title">班级新闻</h1>
+        <p>聚会安排、资料整理进度、毕业后的新动态，都可以在这里留下清晰更新，让分散在各地的人还能同步彼此的节奏。</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#news">查看最新消息</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="news" class="section muted admin-only" aria-labelledby="news-title">
       <div class="section-heading">
         <p class="eyebrow">Notice</p>
-        <h2 id="news-title">班级新闻</h2>
+        <h2 id="news-title">班级新闻 <span class="admin-badge">管理员</span></h2>
         <p>可以发布班级通知、聚会安排、资料整理进度等内容。</p>
       </div>
-      <div class="editor-layout">
+      <div class="editor-layout admin-collapsible">
         <form id="news-form" class="stacked-form panel">
           <label>
             日期

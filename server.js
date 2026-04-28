@@ -9,9 +9,13 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 const ACCESS_PASSWORD = process.env.ACCESS_PASSWORD || "152025";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "rhj152025";
 const SECRET_KEY = process.env.SECRET_KEY || "class-memory-secret-key-change-me";
 const ALLOWED_EXTENSIONS = ["png", "jpg", "jpeg", "gif", "webp"];
 const CATEGORIES = ["members", "activities", "photos", "memories", "news", "history", "messages"];
+
+const SUPABASE_URL = process.env.SUPABASE_URL || "";
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
 const DATA_FILE = path.join(__dirname, "data.json");
 
@@ -215,6 +219,45 @@ app.delete("/api/:category/:id", loginRequired, (req, res) => {
     res.json({ ok: true });
   } catch (err) {
     console.error("deleteItem error:", err);
+    res.status(500).json({ error: "服务器错误" });
+  }
+});
+
+// ── 管理员删除接口（使用 Supabase service_role key，不依赖前端 anon key） ──
+
+app.post("/api/admin/delete-item", async (req, res) => {
+  try {
+    const { password, category, id } = req.body || {};
+    if (password !== ADMIN_PASSWORD) {
+      return res.status(403).json({ error: "只有管理员可以删除内容" });
+    }
+    if (!CATEGORIES.includes(category)) {
+      return res.status(400).json({ error: "无效的分类" });
+    }
+    if (!id) {
+      return res.status(400).json({ error: "缺少 id" });
+    }
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      return res.status(500).json({ error: "服务器 Supabase 配置不完整" });
+    }
+
+    const supabaseRes = await fetch(`${SUPABASE_URL}/rest/v1/${category}?id=eq.${encodeURIComponent(id)}`, {
+      method: "DELETE",
+      headers: {
+        "apikey": SUPABASE_SERVICE_ROLE_KEY,
+        "Authorization": `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        "Prefer": "return=representation"
+      }
+    });
+
+    if (!supabaseRes.ok) {
+      const text = await supabaseRes.text().catch(() => "");
+      return res.status(502).json({ error: `Supabase 删除失败 (${supabaseRes.status}): ${text}` });
+    }
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("admin delete error:", err);
     res.status(500).json({ error: "服务器错误" });
   }
 });

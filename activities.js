@@ -7,6 +7,10 @@ async function renderActivities() {
   }
   target.innerHTML = activities.map((item, index) => {
     const largeClass = index === 0 ? " large" : "";
+    const actions = `
+      ${isAdminMode() ? `<button class="button ghost" type="button" data-action="edit-activity" data-id="${item.id}">编辑</button>` : ""}
+      ${isAdminMode() ? `<button class="button ghost danger" type="button" data-action="delete-activity" data-id="${item.id}">删除</button>` : ""}
+    `.trim();
     return `
       <article class="activity-card${largeClass}">
         <img src="${escapeAttribute(item.image)}" alt="${escapeAttribute(item.title)}" loading="lazy">
@@ -14,10 +18,7 @@ async function renderActivities() {
           <span>${escapeHtml(item.tag)}</span>
           <h3>${escapeHtml(item.title)}</h3>
           <p>${escapeHtml(item.text)}</p>
-          <div class="activity-actions">
-            <button class="button ghost" type="button" data-action="edit-activity" data-id="${item.id}">编辑</button>
-            <button class="button ghost danger" type="button" data-action="delete-activity" data-id="${item.id}">删除</button>
-          </div>
+          ${actions ? `<div class="activity-actions">${actions}</div>` : ""}
         </div>
       </article>
     `;
@@ -50,6 +51,10 @@ function bindActivityForm() {
     if (!item) return;
 
     if (button.dataset.action === "edit-activity") {
+      if (!isAdminMode()) {
+        showToast("只有管理员可以编辑活动。", "error");
+        return;
+      }
       editIndexInput.value = String(item.id);
       tagInput.value = item.tag;
       titleInput.value = item.title;
@@ -60,12 +65,17 @@ function bindActivityForm() {
     }
 
     if (button.dataset.action === "delete-activity") {
+      if (!isAdminMode()) {
+        showToast("只有管理员可以删除内容。", "error");
+        return;
+      }
       if (!confirm("确定删除这条活动？")) return;
       try {
         await deleteItem("activities", id);
+        showToast("删除成功", "success");
         await renderActivities();
       } catch (e) {
-        alert(e.message);
+        showToast(e.message || "删除失败，请重试", "error");
       }
     }
   });
@@ -79,39 +89,40 @@ function bindActivityForm() {
     if (!tag || !title || !content) return;
 
     try {
-      let imageUrl;
-      if (fileInput.files[0]) {
-        imageUrl = await supabaseUpload(fileInput.files[0], "activities");
-      } else if (editId) {
-        const activities = await fetchList("activities");
-        const existing = activities.find(a => String(a.id) === editId);
-        imageUrl = existing ? existing.image : "../assets/class-photo.jpg";
-      } else {
-        imageUrl = "../assets/class-photo.jpg";
-      }
+      await withSubmitLoading(submitButton, async () => {
+        let imageUrl;
+        if (fileInput.files[0]) {
+          imageUrl = await supabaseUpload(fileInput.files[0], "activities");
+        } else if (editId) {
+          const activities = await fetchList("activities");
+          const existing = activities.find(a => String(a.id) === editId);
+          imageUrl = existing ? existing.image : "../assets/class-photo.jpg";
+        } else {
+          imageUrl = "../assets/class-photo.jpg";
+        }
 
-      if (editId) {
-        await updateItem("activities", Number(editId), {
-          tag,
-          title,
-          content,
-          image_url: imageUrl
-        });
-      } else {
-        // createItem maps UI field names to DB columns via buildSupabaseRow
-        await createItem("activities", { tag, title, text: content, image: imageUrl });
-      }
+        if (editId) {
+          await updateItem("activities", Number(editId), {
+            tag,
+            title,
+            content,
+            image_url: imageUrl
+          });
+        } else {
+          await createItem("activities", { tag, title, text: content, image: imageUrl });
+        }
+      });
 
+      showToast(editId ? "修改已保存！" : "添加成功！", "success");
       await renderActivities();
       form.reset();
       editIndexInput.value = "";
       preview.src = "../assets/class-photo.jpg";
       submitButton.textContent = "添加活动";
-    } catch (e) {
-      alert(e.message);
-    }
+    } catch (_) {}
   });
 }
 
 requestAnimationFrame(() => renderActivities());
 bindActivityForm();
+document.addEventListener("adminmodechange", () => renderActivities());

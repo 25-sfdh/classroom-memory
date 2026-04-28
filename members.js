@@ -11,6 +11,7 @@ async function renderMembers() {
       <div>
         <h3>${escapeHtml(member.name)}</h3>
         <p>${escapeHtml(member.note)}</p>
+        ${deleteActionMarkup("members", member.id)}
       </div>
     </article>
   `).join("");
@@ -36,18 +37,33 @@ function bindMemberForm() {
     const note = noteInput.value.trim();
     if (!name || !note || !file) return;
 
+    const submitBtn = form.querySelector('[type="submit"]');
     try {
-      const photoUrl = await supabaseUpload(file, "members");
-      const member = { name, note, photo: photoUrl };
-      await createItem("members", member);
+      await withSubmitLoading(submitBtn, async () => {
+        const photoUrl = await supabaseUpload(file, "members");
+        const member = { name, note, photo: photoUrl };
+        await createItem("members", member);
+      });
+      showToast("添加成功！", "success");
       await renderMembers();
       form.reset();
       preview.src = "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80";
-    } catch (e) {
-      alert(e.message);
-    }
+    } catch (_) {}
+  });
+}
+
+function bindMemberDelete() {
+  const list = document.getElementById("member-list");
+  if (!list) return;
+
+  list.addEventListener("click", async (event) => {
+    const button = event.target.closest('[data-action="delete-item"][data-category="members"]');
+    if (!button) return;
+    await handleDeleteAction("members", button.dataset.id, renderMembers);
   });
 }
 
 requestAnimationFrame(() => renderMembers());
 bindMemberForm();
+bindMemberDelete();
+document.addEventListener("adminmodechange", () => renderMembers());

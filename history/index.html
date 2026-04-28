@@ -9,7 +9,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
   <link rel="stylesheet" href="../style.css">
 </head>
-<body>
+<body class="page-history">
   <div id="password-gate" class="password-gate">
     <div class="password-card">
       <p class="eyebrow">Private Access</p>
@@ -51,13 +51,24 @@
   </header>
 
   <main id="main-content">
-    <section id="history" class="section" aria-labelledby="history-title">
+    <section class="page-hero" aria-labelledby="page-hero-title">
+      <div class="page-hero-inner">
+        <p class="eyebrow">Timeline</p>
+        <h1 id="page-hero-title">班级历史</h1>
+        <p>从 2022 到 2025，15 班一路走来的关键节点都应该有位置。这里不是流水账，更像一本可以继续补完的年级纪念册。</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#history">打开时间线</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="history" class="section admin-only" aria-labelledby="history-title">
       <div class="section-heading">
         <p class="eyebrow">Timeline</p>
-        <h2 id="history-title">班级历史</h2>
+        <h2 id="history-title">班级历史 <span class="admin-badge">管理员</span></h2>
         <p>记录 15 班从入学到毕业的重要节点，也可以继续补充新的集体事件。</p>
       </div>
-      <div class="editor-layout">
+      <div class="editor-layout admin-collapsible">
         <form id="history-form" class="stacked-form panel">
           <label>
             时间

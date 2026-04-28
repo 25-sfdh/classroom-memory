@@ -10,6 +10,7 @@ async function renderNews() {
       <time datetime="${escapeAttribute(item.date)}">${formatDate(item.date)}</time>
       <h3>${escapeHtml(item.title)}</h3>
       <p>${escapeHtml(item.text)}</p>
+      ${isAdminMode() ? deleteActionMarkup("news", item.id) : ""}
     </article>
   `).join("");
 }
@@ -29,15 +30,31 @@ function bindNewsForm() {
       text: textInput.value.trim()
     };
     if (!item.date || !item.title || !item.text) return;
+
+    const submitBtn = form.querySelector('[type="submit"]');
     try {
-      await createItem("news", item);
+      await withSubmitLoading(submitBtn, async () => {
+        await createItem("news", item);
+      });
+      showToast("发布成功！", "success");
       await renderNews();
       form.reset();
-    } catch (e) {
-      alert(e.message);
-    }
+    } catch (_) {}
+  });
+}
+
+function bindNewsDelete() {
+  const list = document.getElementById("news-list");
+  if (!list) return;
+
+  list.addEventListener("click", async (event) => {
+    const button = event.target.closest('[data-action="delete-item"][data-category="news"]');
+    if (!button) return;
+    await handleDeleteAction("news", button.dataset.id, renderNews);
   });
 }
 
 requestAnimationFrame(() => renderNews());
 bindNewsForm();
+bindNewsDelete();
+document.addEventListener("adminmodechange", () => renderNews());

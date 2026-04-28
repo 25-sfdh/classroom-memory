@@ -10,6 +10,7 @@ async function renderHistory() {
       <span>${formatMonth(item.date)}</span>
       <h3>${escapeHtml(item.title)}</h3>
       <p>${escapeHtml(item.text)}</p>
+      ${isAdminMode() ? deleteActionMarkup("history", item.id) : ""}
     </li>
   `).join("");
 }
@@ -29,15 +30,31 @@ function bindHistoryForm() {
       text: textInput.value.trim()
     };
     if (!item.date || !item.title || !item.text) return;
+
+    const submitBtn = form.querySelector('[type="submit"]');
     try {
-      await createItem("history", item);
+      await withSubmitLoading(submitBtn, async () => {
+        await createItem("history", item);
+      });
+      showToast("添加成功！", "success");
       await renderHistory();
       form.reset();
-    } catch (e) {
-      alert(e.message);
-    }
+    } catch (_) {}
+  });
+}
+
+function bindHistoryDelete() {
+  const list = document.getElementById("history-list");
+  if (!list) return;
+
+  list.addEventListener("click", async (event) => {
+    const button = event.target.closest('[data-action="delete-item"][data-category="history"]');
+    if (!button) return;
+    await handleDeleteAction("history", button.dataset.id, renderHistory);
   });
 }
 
 requestAnimationFrame(() => renderHistory());
 bindHistoryForm();
+bindHistoryDelete();
+document.addEventListener("adminmodechange", () => renderHistory());
