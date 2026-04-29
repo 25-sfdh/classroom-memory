@@ -51,10 +51,7 @@ function bindActivityForm() {
     if (!item) return;
 
     if (button.dataset.action === "edit-activity") {
-      if (!isAdminMode()) {
-        showToast("只有管理员可以编辑活动。", "error");
-        return;
-      }
+      if (!isAdminMode()) { showToast("只有管理员可以编辑活动。", "error"); return; }
       editIndexInput.value = String(item.id);
       tagInput.value = item.tag;
       titleInput.value = item.title;
@@ -65,10 +62,7 @@ function bindActivityForm() {
     }
 
     if (button.dataset.action === "delete-activity") {
-      if (!isAdminMode()) {
-        showToast("只有管理员可以删除内容。", "error");
-        return;
-      }
+      if (!isAdminMode()) { showToast("只有管理员可以删除内容。", "error"); return; }
       if (!confirm("确定删除这条活动？")) return;
       try {
         await deleteItem("activities", id);
@@ -91,24 +85,11 @@ function bindActivityForm() {
     try {
       await withSubmitLoading(submitButton, async () => {
         if (editId) {
-          const updates = { tag, title, content };
-          const file = fileInput.files[0];
-          if (file) {
-            const fd = new FormData();
-            fd.append("tag", tag);
-            fd.append("title", title);
-            fd.append("content", content);
-            fd.append("image", file, file.name);
-            const token = await pbAuth();
-            const res = await fetch(`${PB_URL}/api/collections/activities/records/${editId}`, {
-              method: "PATCH",
-              headers: { "Authorization": `Bearer ${token}` },
-              body: fd,
-            });
-            if (!res.ok) throw new Error((await res.json().catch(() => ({}))).message || `更新失败`);
-          } else {
-            await updateItem("activities", editId, updates);
+          const updates = { tag, title, text: content };
+          if (fileInput.files[0]) {
+            updates._file = fileInput.files[0];
           }
+          await updateItem("activities", editId, updates);
         } else {
           const data = { tag, title, text: content };
           if (fileInput.files[0]) {

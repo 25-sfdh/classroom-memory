@@ -1,0 +1,406 @@
+[2.00ms] CREATE TABLE IF NOT EXISTS `_migrations` (file VARCHAR(255) PRIMARY KEY NOT NULL, applied INTEGER NOT NULL)
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1640988000_aux_init.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1640988000_init.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233556_v0.23_migrate.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233557_v0.23_migrate2.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233558_v0.23_migrate3.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233559_v0.23_migrate4.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1763020353_update_default_auth_alert_templates.go' LIMIT 1
+[1.00ms] SELECT `_collections`.* FROM `_collections` ORDER BY `rowid` ASC
+[0.00ms] SELECT `_params`.* FROM `_params` WHERE `id`='settings'
+[0.00ms] SELECT `_collections`.* FROM `_collections` ORDER BY `rowid` ASC
+[0.00ms] CREATE TABLE IF NOT EXISTS `_migrations` (file VARCHAR(255) PRIMARY KEY NOT NULL, applied INTEGER NOT NULL)
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1640988000_aux_init.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1640988000_init.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233556_v0.23_migrate.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233557_v0.23_migrate2.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233558_v0.23_migrate3.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233559_v0.23_migrate4.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1763020353_update_default_auth_alert_templates.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777386598_created_activities.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777386598_created_history.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777386598_created_members.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777386598_created_memories.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777386598_created_messages.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777386598_created_news.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777386598_created_photos.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777386628_updated_activities.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777386628_updated_history.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777386628_updated_members.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777386628_updated_memories.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777386628_updated_messages.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777386628_updated_news.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777386628_updated_photos.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777387455_updated_activities.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777387455_updated_history.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777387455_updated_members.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777387455_updated_memories.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777387455_updated_messages.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777387455_updated_news.js' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1777387455_updated_photos.js' LIMIT 1
+2026/04/29 04:01:51 Server started at http://127.0.0.1:8090
+├─ REST API:  http://127.0.0.1:8090/api/
+└─ Dashboard: http://127.0.0.1:8090/_/
+[0.00ms] SELECT count(*) FROM `_superusers` WHERE NOT (`email`='__pbinstaller@example.com')
+INFO GET /api/health
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `email`='admin@class15.com' LIMIT 1
+[0.00ms] SELECT `_authOrigins`.* FROM `_authOrigins` WHERE `collectionRef`='pbc_3142635823' AND `recordRef`='75j5wwybr1nv8jm' ORDER BY `created` DESC
+2026/04/29 04:02:07 Mail sent
+├─ From: {Support support@example.com}
+├─ To: [{ admin@class15.com}]
+├─ Cc: []
+├─ Bcc: []
+├─ Subject: Login from a new location
+└─ HTML:
+        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+        <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width,initial-scale=1" />
+            <style>
+                body, html {
+                    padding: 0;
+                    margin: 0;
+                    border: 0;
+                    color: #16161a;
+                    background: #fff;
+                    font-size: 14px;
+                    line-height: 20px;
+                    font-weight: normal;
+                    font-family: Source Sans Pro, sans-serif, emoji;
+                }
+                body {
+                    padding: 20px 30px;
+                }
+                strong {
+                    font-weight: bold;
+                }
+                em, i {
+                    font-style: italic;
+                }
+                p {
+                    display: block;
+                    margin: 10px 0;
+                    font-family: inherit;
+                }
+                small {
+                    font-size: 12px;
+                    line-height: 16px;
+                }
+                hr {
+                    display: block;
+                    height: 1px;
+                    border: 0;
+                    width: 100%;
+                    background: #e1e6ea;
+                    margin: 10px 0;
+                }
+                a {
+                    color: inherit;
+                }
+                .hidden {
+                    display: none !important;
+                }
+                .btn {
+                    display: inline-block;
+                    vertical-align: top;
+                    border: 0;
+                    cursor: pointer;
+                    color: #fff !important;
+                    background: #16161a !important;
+                    text-decoration: none !important;
+                    line-height: 40px;
+                    width: auto;
+                    min-width: 150px;
+                    text-align: center;
+                    padding: 0 20px;
+                    margin: 5px 0;
+                    font-family: Source Sans Pro, sans-serif, emoji;;
+                    font-size: 14px;
+                    font-weight: bold;
+                    border-radius: 6px;
+                    box-sizing: border-box;
+                }
+            </style>
+        </head>
+        <body>
+            <p>Hello,</p>
+        <p>We noticed a login to your Acme account from a new location:</p>
+        <p><em>2026-04-29 11:02:07.909Z - 127.0.0.1 </em></p>
+        <p><strong>If this wasn't you, you should immediately change your Acme account password to revoke access from all other locations.</strong></p>
+        <p>If this was you, you may disregard this email.</p>
+        <p>
+          Thanks,<br/>
+          Acme team
+        </p>
+        </body>
+        </html>
+WARN [recordAuthResponse] Failed to send login alert
+└─ {"error":"failed to locate a sendmail executable path"}
+INFO POST /api/collections/_superusers/auth-with-password
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+INFO GET /api/collections/members
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='members' OR LOWER(`name`)='members' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_3572739349' OR LOWER(`name`)='pbc_3572739349' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_3572739349'
+[0.00ms] SELECT count(*) FROM `_collections` WHERE (LOWER(`name`)='members') AND (`id`<>'pbc_3572739349') LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='members'
+[0.00ms] UPDATE `_collections` SET `createRule`=0x1cf983c92a80, `created`='2026-04-28 14:29:58.218Z', `deleteRule`=NULL, `fields`='[{"autogeneratePattern":"[a-z0-9]{15}","hidden":false,"id":"text3208210256","max":15,"min":15,"name":"id","pattern":"^[a-z0-9]+$","presentable":false,"primaryKey":true,"required":true,"system":true,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text1579384326","max":0,"min":0,"name":"name","pattern":"","presentable":false,"primaryKey":false,"required":true,"system":false,"type":"text"},{"hidden":false,"id":"file376926767","maxSelect":1,"maxSize":5242880,"mimeTypes":["image/jpeg","image/png","image/webp"],"name":"avatar","presentable":false,"protected":false,"required":false,"system":false,"thumbs":null,"type":"file"},{"autogeneratePattern":"","hidden":false,"id":"text3709889147","max":0,"min":0,"name":"bio","pattern":"","presentable":false,"primaryKey":false,"required":false,"system":false,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text1466534506","max":0,"min":0,"name":"role","pattern":"","presentable":false,"primaryKey":false,"required":false,"system":false,"type":"text"}]', `id`='pbc_3572739349', `indexes`='[]', `listRule`=0x1cf983c92a60, `name`='members', `options`='{}', `system`=false, `type`='base', `updateRule`=NULL, `updated`='2026-04-29 11:02:07.929Z', `viewRule`=0x1cf983c92a70 WHERE `id`='pbc_3572739349'
+[0.00ms] SELECT (1) FROM `sqlite_schema` WHERE (`type` IN ('table', 'view')) AND (LOWER(`name`)=LOWER('members')) LIMIT 1
+[0.00ms] PRAGMA optimize
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `type`='view' ORDER BY `rowid` ASC
+[0.00ms] SELECT `_collections`.* FROM `_collections` ORDER BY `rowid` ASC
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_3572739349' OR LOWER(`name`)='pbc_3572739349' LIMIT 1
+INFO PATCH /api/collections/members
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+INFO GET /api/collections/photos
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='photos' OR LOWER(`name`)='photos' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_1063624087' OR LOWER(`name`)='pbc_1063624087' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_1063624087'
+[0.00ms] SELECT count(*) FROM `_collections` WHERE (LOWER(`name`)='photos') AND (`id`<>'pbc_1063624087') LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='photos'
+[0.00ms] UPDATE `_collections` SET `createRule`=0x1cf98426f0f0, `created`='2026-04-28 14:29:58.223Z', `deleteRule`=NULL, `fields`='[{"autogeneratePattern":"[a-z0-9]{15}","hidden":false,"id":"text3208210256","max":15,"min":15,"name":"id","pattern":"^[a-z0-9]+$","presentable":false,"primaryKey":true,"required":true,"system":true,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text724990059","max":0,"min":0,"name":"title","pattern":"","presentable":false,"primaryKey":false,"required":true,"system":false,"type":"text"},{"hidden":false,"id":"file3309110367","maxSelect":1,"maxSize":10485760,"mimeTypes":["image/jpeg","image/png","image/webp"],"name":"image","presentable":false,"protected":false,"required":false,"system":false,"thumbs":null,"type":"file"},{"autogeneratePattern":"","hidden":false,"id":"text1843675174","max":0,"min":0,"name":"description","pattern":"","presentable":false,"primaryKey":false,"required":false,"system":false,"type":"text"},{"exceptDomains":null,"hidden":false,"id":"url2776776943","name":"source_url","onlyDomains":null,"presentable":false,"required":false,"system":false,"type":"url"}]', `id`='pbc_1063624087', `indexes`='[]', `listRule`=0x1cf98426f0d0, `name`='photos', `options`='{}', `system`=false, `type`='base', `updateRule`=NULL, `updated`='2026-04-29 11:02:07.937Z', `viewRule`=0x1cf98426f0e0 WHERE `id`='pbc_1063624087'
+[0.00ms] SELECT (1) FROM `sqlite_schema` WHERE (`type` IN ('table', 'view')) AND (LOWER(`name`)=LOWER('photos')) LIMIT 1
+[0.00ms] PRAGMA optimize
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `type`='view' ORDER BY `rowid` ASC
+[0.00ms] SELECT `_collections`.* FROM `_collections` ORDER BY `rowid` ASC
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_1063624087' OR LOWER(`name`)='pbc_1063624087' LIMIT 1
+INFO PATCH /api/collections/photos
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+INFO GET /api/collections/activities
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='activities' OR LOWER(`name`)='activities' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_1262591861' OR LOWER(`name`)='pbc_1262591861' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_1262591861'
+[0.00ms] SELECT count(*) FROM `_collections` WHERE (LOWER(`name`)='activities') AND (`id`<>'pbc_1262591861') LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='activities'
+[0.00ms] UPDATE `_collections` SET `createRule`=0x1cf983be5e80, `created`='2026-04-28 14:29:58.226Z', `deleteRule`=NULL, `fields`='[{"autogeneratePattern":"[a-z0-9]{15}","hidden":false,"id":"text3208210256","max":15,"min":15,"name":"id","pattern":"^[a-z0-9]+$","presentable":false,"primaryKey":true,"required":true,"system":true,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text59357059","max":0,"min":0,"name":"tag","pattern":"","presentable":false,"primaryKey":false,"required":false,"system":false,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text724990059","max":0,"min":0,"name":"title","pattern":"","presentable":false,"primaryKey":false,"required":true,"system":false,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text4274335913","max":0,"min":0,"name":"content","pattern":"","presentable":false,"primaryKey":false,"required":false,"system":false,"type":"text"},{"hidden":false,"id":"file3309110367","maxSelect":1,"maxSize":10485760,"mimeTypes":["image/jpeg","image/png","image/webp"],"name":"image","presentable":false,"protected":false,"required":false,"system":false,"thumbs":null,"type":"file"},{"exceptDomains":null,"hidden":false,"id":"url2776776943","name":"source_url","onlyDomains":null,"presentable":false,"required":false,"system":false,"type":"url"}]', `id`='pbc_1262591861', `indexes`='[]', `listRule`=0x1cf983be5e20, `name`='activities', `options`='{}', `system`=false, `type`='base', `updateRule`=NULL, `updated`='2026-04-29 11:02:07.941Z', `viewRule`=0x1cf983be5e50 WHERE `id`='pbc_1262591861'
+[0.00ms] SELECT (1) FROM `sqlite_schema` WHERE (`type` IN ('table', 'view')) AND (LOWER(`name`)=LOWER('activities')) LIMIT 1
+[0.00ms] PRAGMA optimize
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `type`='view' ORDER BY `rowid` ASC
+[0.00ms] SELECT `_collections`.* FROM `_collections` ORDER BY `rowid` ASC
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_1262591861' OR LOWER(`name`)='pbc_1262591861' LIMIT 1
+INFO PATCH /api/collections/activities
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+INFO GET /api/collections/messages
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='messages' OR LOWER(`name`)='messages' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_2605467279' OR LOWER(`name`)='pbc_2605467279' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_2605467279'
+[0.00ms] SELECT count(*) FROM `_collections` WHERE (LOWER(`name`)='messages') AND (`id`<>'pbc_2605467279') LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='messages'
+[0.00ms] UPDATE `_collections` SET `createRule`=0x1cf984502830, `created`='2026-04-28 14:29:58.230Z', `deleteRule`=NULL, `fields`='[{"autogeneratePattern":"[a-z0-9]{15}","hidden":false,"id":"text3208210256","max":15,"min":15,"name":"id","pattern":"^[a-z0-9]+$","presentable":false,"primaryKey":true,"required":true,"system":true,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text1579384326","max":0,"min":0,"name":"name","pattern":"","presentable":false,"primaryKey":false,"required":true,"system":false,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text4274335913","max":0,"min":0,"name":"content","pattern":"","presentable":false,"primaryKey":false,"required":true,"system":false,"type":"text"}]', `id`='pbc_2605467279', `indexes`='[]', `listRule`=0x1cf984502810, `name`='messages', `options`='{}', `system`=false, `type`='base', `updateRule`=NULL, `updated`='2026-04-29 11:02:07.947Z', `viewRule`=0x1cf984502820 WHERE `id`='pbc_2605467279'
+[0.00ms] SELECT (1) FROM `sqlite_schema` WHERE (`type` IN ('table', 'view')) AND (LOWER(`name`)=LOWER('messages')) LIMIT 1
+[0.00ms] PRAGMA optimize
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `type`='view' ORDER BY `rowid` ASC
+[0.00ms] SELECT `_collections`.* FROM `_collections` ORDER BY `rowid` ASC
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_2605467279' OR LOWER(`name`)='pbc_2605467279' LIMIT 1
+INFO PATCH /api/collections/messages
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+INFO GET /api/collections/news
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='news' OR LOWER(`name`)='news' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_987692768' OR LOWER(`name`)='pbc_987692768' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_987692768'
+[0.00ms] SELECT count(*) FROM `_collections` WHERE (LOWER(`name`)='news') AND (`id`<>'pbc_987692768') LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='news'
+[0.00ms] UPDATE `_collections` SET `createRule`=0x1cf9838af950, `created`='2026-04-28 14:29:58.234Z', `deleteRule`=NULL, `fields`='[{"autogeneratePattern":"[a-z0-9]{15}","hidden":false,"id":"text3208210256","max":15,"min":15,"name":"id","pattern":"^[a-z0-9]+$","presentable":false,"primaryKey":true,"required":true,"system":true,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text724990059","max":0,"min":0,"name":"title","pattern":"","presentable":false,"primaryKey":false,"required":true,"system":false,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text2862495610","max":0,"min":0,"name":"date","pattern":"","presentable":false,"primaryKey":false,"required":false,"system":false,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text4274335913","max":0,"min":0,"name":"content","pattern":"","presentable":false,"primaryKey":false,"required":false,"system":false,"type":"text"}]', `id`='pbc_987692768', `indexes`='[]', `listRule`=0x1cf9838af8f0, `name`='news', `options`='{}', `system`=false, `type`='base', `updateRule`=NULL, `updated`='2026-04-29 11:02:07.951Z', `viewRule`=0x1cf9838af930 WHERE `id`='pbc_987692768'
+[0.00ms] SELECT (1) FROM `sqlite_schema` WHERE (`type` IN ('table', 'view')) AND (LOWER(`name`)=LOWER('news')) LIMIT 1
+[0.00ms] PRAGMA optimize
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `type`='view' ORDER BY `rowid` ASC
+[0.00ms] SELECT `_collections`.* FROM `_collections` ORDER BY `rowid` ASC
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_987692768' OR LOWER(`name`)='pbc_987692768' LIMIT 1
+INFO PATCH /api/collections/news
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+INFO GET /api/collections/memories
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='memories' OR LOWER(`name`)='memories' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_1337100956' OR LOWER(`name`)='pbc_1337100956' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_1337100956'
+[0.00ms] SELECT count(*) FROM `_collections` WHERE (LOWER(`name`)='memories') AND (`id`<>'pbc_1337100956') LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='memories'
+[0.00ms] UPDATE `_collections` SET `createRule`=0x1cf983ff9680, `created`='2026-04-28 14:29:58.238Z', `deleteRule`=NULL, `fields`='[{"autogeneratePattern":"[a-z0-9]{15}","hidden":false,"id":"text3208210256","max":15,"min":15,"name":"id","pattern":"^[a-z0-9]+$","presentable":false,"primaryKey":true,"required":true,"system":true,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text1579384326","max":0,"min":0,"name":"name","pattern":"","presentable":false,"primaryKey":false,"required":false,"system":false,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text4274335913","max":0,"min":0,"name":"content","pattern":"","presentable":false,"primaryKey":false,"required":true,"system":false,"type":"text"}]', `id`='pbc_1337100956', `indexes`='[]', `listRule`=0x1cf983ff9660, `name`='memories', `options`='{}', `system`=false, `type`='base', `updateRule`=NULL, `updated`='2026-04-29 11:02:07.955Z', `viewRule`=0x1cf983ff9670 WHERE `id`='pbc_1337100956'
+[0.00ms] SELECT (1) FROM `sqlite_schema` WHERE (`type` IN ('table', 'view')) AND (LOWER(`name`)=LOWER('memories')) LIMIT 1
+[0.00ms] PRAGMA optimize
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `type`='view' ORDER BY `rowid` ASC
+[0.00ms] SELECT `_collections`.* FROM `_collections` ORDER BY `rowid` ASC
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_1337100956' OR LOWER(`name`)='pbc_1337100956' LIMIT 1
+INFO PATCH /api/collections/memories
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+INFO GET /api/collections/history
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='history' OR LOWER(`name`)='history' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_3068727201' OR LOWER(`name`)='pbc_3068727201' LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_3068727201'
+[0.00ms] SELECT count(*) FROM `_collections` WHERE (LOWER(`name`)='history') AND (`id`<>'pbc_3068727201') LIMIT 1
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='history'
+[0.00ms] UPDATE `_collections` SET `createRule`=0x1cf983de9a50, `created`='2026-04-28 14:29:58.241Z', `deleteRule`=NULL, `fields`='[{"autogeneratePattern":"[a-z0-9]{15}","hidden":false,"id":"text3208210256","max":15,"min":15,"name":"id","pattern":"^[a-z0-9]+$","presentable":false,"primaryKey":true,"required":true,"system":true,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text2862495610","max":0,"min":0,"name":"date","pattern":"","presentable":false,"primaryKey":false,"required":false,"system":false,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text724990059","max":0,"min":0,"name":"title","pattern":"","presentable":false,"primaryKey":false,"required":true,"system":false,"type":"text"},{"autogeneratePattern":"","hidden":false,"id":"text4274335913","max":0,"min":0,"name":"content","pattern":"","presentable":false,"primaryKey":false,"required":false,"system":false,"type":"text"}]', `id`='pbc_3068727201', `indexes`='[]', `listRule`=0x1cf983de9a20, `name`='history', `options`='{}', `system`=false, `type`='base', `updateRule`=NULL, `updated`='2026-04-29 11:02:07.960Z', `viewRule`=0x1cf983de9a30 WHERE `id`='pbc_3068727201'
+[0.00ms] SELECT (1) FROM `sqlite_schema` WHERE (`type` IN ('table', 'view')) AND (LOWER(`name`)=LOWER('history')) LIMIT 1
+[0.00ms] PRAGMA optimize
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `type`='view' ORDER BY `rowid` ASC
+[0.00ms] SELECT `_collections`.* FROM `_collections` ORDER BY `rowid` ASC
+[0.00ms] SELECT `_collections`.* FROM `_collections` WHERE `id`='pbc_3068727201' OR LOWER(`name`)='pbc_3068727201' LIMIT 1
+INFO PATCH /api/collections/history
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `members`.* FROM `members` LIMIT 100
+[1.00ms] SELECT COUNT(DISTINCT `members`.`_rowid_`) FROM `members`
+INFO GET /api/collections/members/records?perPage=100
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `photos`.* FROM `photos` LIMIT 100
+[0.00ms] SELECT COUNT(DISTINCT `photos`.`_rowid_`) FROM `photos`
+INFO GET /api/collections/photos/records?perPage=100
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `photos`.* FROM `photos` WHERE `photos`.`id`='89mefz67g2gyefr' LIMIT 1
+[0.00ms] DELETE FROM `photos` WHERE `id`='89mefz67g2gyefr'
+INFO DELETE /api/collections/photos/records/89mefz67g2gyefr
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `photos`.* FROM `photos` WHERE `photos`.`id`='cjs6wxzjd7b6m8s' LIMIT 1
+[0.00ms] DELETE FROM `photos` WHERE `id`='cjs6wxzjd7b6m8s'
+INFO DELETE /api/collections/photos/records/cjs6wxzjd7b6m8s
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `activities`.* FROM `activities` LIMIT 100
+[0.00ms] SELECT COUNT(DISTINCT `activities`.`_rowid_`) FROM `activities`
+INFO GET /api/collections/activities/records?perPage=100
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `activities`.* FROM `activities` WHERE `activities`.`id`='f0pe93428v7rxwa' LIMIT 1
+[0.00ms] DELETE FROM `activities` WHERE `id`='f0pe93428v7rxwa'
+INFO DELETE /api/collections/activities/records/f0pe93428v7rxwa
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `activities`.* FROM `activities` WHERE `activities`.`id`='co4rdd2aaeyo68d' LIMIT 1
+[0.00ms] DELETE FROM `activities` WHERE `id`='co4rdd2aaeyo68d'
+INFO DELETE /api/collections/activities/records/co4rdd2aaeyo68d
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `activities`.* FROM `activities` WHERE `activities`.`id`='hvnlu1xmf4h3dk3' LIMIT 1
+[0.00ms] DELETE FROM `activities` WHERE `id`='hvnlu1xmf4h3dk3'
+INFO DELETE /api/collections/activities/records/hvnlu1xmf4h3dk3
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `messages`.* FROM `messages` LIMIT 100
+[0.00ms] SELECT COUNT(DISTINCT `messages`.`_rowid_`) FROM `messages`
+INFO GET /api/collections/messages/records?perPage=100
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `messages`.* FROM `messages` WHERE `messages`.`id`='2v3v8ckpog6j703' LIMIT 1
+[0.00ms] DELETE FROM `messages` WHERE `id`='2v3v8ckpog6j703'
+INFO DELETE /api/collections/messages/records/2v3v8ckpog6j703
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `news`.* FROM `news` LIMIT 100
+[0.00ms] SELECT COUNT(DISTINCT `news`.`_rowid_`) FROM `news`
+INFO GET /api/collections/news/records?perPage=100
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `news`.* FROM `news` WHERE `news`.`id`='48lvt44j6wzl7fh' LIMIT 1
+[0.00ms] DELETE FROM `news` WHERE `id`='48lvt44j6wzl7fh'
+INFO DELETE /api/collections/news/records/48lvt44j6wzl7fh
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `news`.* FROM `news` WHERE `news`.`id`='w2fj7valrqv6726' LIMIT 1
+[0.00ms] DELETE FROM `news` WHERE `id`='w2fj7valrqv6726'
+INFO DELETE /api/collections/news/records/w2fj7valrqv6726
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `news`.* FROM `news` WHERE `news`.`id`='qft8jl9c2oddlno' LIMIT 1
+[0.00ms] DELETE FROM `news` WHERE `id`='qft8jl9c2oddlno'
+INFO DELETE /api/collections/news/records/qft8jl9c2oddlno
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `memories`.* FROM `memories` LIMIT 100
+[0.00ms] SELECT COUNT(DISTINCT `memories`.`_rowid_`) FROM `memories`
+INFO GET /api/collections/memories/records?perPage=100
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `memories`.* FROM `memories` WHERE `memories`.`id`='8kwaa3m2gcz3f27' LIMIT 1
+[0.00ms] DELETE FROM `memories` WHERE `id`='8kwaa3m2gcz3f27'
+INFO DELETE /api/collections/memories/records/8kwaa3m2gcz3f27
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `memories`.* FROM `memories` WHERE `memories`.`id`='qcgcg8nmc8s2y73' LIMIT 1
+[0.00ms] DELETE FROM `memories` WHERE `id`='qcgcg8nmc8s2y73'
+INFO DELETE /api/collections/memories/records/qcgcg8nmc8s2y73
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `history`.* FROM `history` LIMIT 100
+[0.00ms] SELECT COUNT(DISTINCT `history`.`_rowid_`) FROM `history`
+INFO GET /api/collections/history/records?perPage=100
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `history`.* FROM `history` WHERE `history`.`id`='2cpx0mm1r04xe4s' LIMIT 1
+[0.00ms] DELETE FROM `history` WHERE `id`='2cpx0mm1r04xe4s'
+INFO DELETE /api/collections/history/records/2cpx0mm1r04xe4s
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `history`.* FROM `history` WHERE `history`.`id`='wozm53whtouyrf8' LIMIT 1
+[0.00ms] DELETE FROM `history` WHERE `id`='wozm53whtouyrf8'
+INFO DELETE /api/collections/history/records/wozm53whtouyrf8
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `history`.* FROM `history` WHERE `history`.`id`='7dv8uaq0icblht3' LIMIT 1
+[0.00ms] DELETE FROM `history` WHERE `id`='7dv8uaq0icblht3'
+INFO DELETE /api/collections/history/records/7dv8uaq0icblht3
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] SELECT `history`.* FROM `history` WHERE `history`.`id`='vq61x5qltybkmid' LIMIT 1
+[0.00ms] DELETE FROM `history` WHERE `id`='vq61x5qltybkmid'
+INFO DELETE /api/collections/history/records/vq61x5qltybkmid
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] INSERT INTO `memories` (`content`, `id`, `name`) VALUES ('最难忘的是毕业前最后一次大扫除，大家一边收拾教室，一边把黑板写满祝福。', 'pgi3yhsdingvmv6', '班长')
+INFO POST /api/collections/memories/records
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] INSERT INTO `memories` (`content`, `id`, `name`) VALUES ('高三的早读声、同桌递来的草稿纸、月考后的互相安慰，都值得被记住。', 'x9zhf1g87evwyd5', '语文课代表')
+INFO POST /api/collections/memories/records
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] INSERT INTO `messages` (`content`, `id`, `name`) VALUES ('我现在在上海工作，十年聚会如果定在暑假，大概率可以参加。', 'j4qbjjoqo376xbc', '老同学')
+INFO POST /api/collections/messages/records
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] INSERT INTO `history` (`content`, `date`, `id`, `title`) VALUES ('第一次集合、第一次点名，班级故事从这里开始。', '2022-09', 't75ncnhcp9bp2s4', '开学与军训')
+INFO POST /api/collections/history/records
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] INSERT INTO `history` (`content`, `date`, `id`, `title`) VALUES ('接力、跳高、长跑和后勤组一起撑起了那次高光时刻。', '2023-10', 'wfgsy1djsly1xzn', '运动会总分突破')
+INFO POST /api/collections/history/records
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] INSERT INTO `history` (`content`, `date`, `id`, `title`) VALUES ('节目、掌声和合唱让教室变成临时舞台。', '2024-12', 'mas2mnntr3ttfs5', '最后一次元旦晚会')
+INFO POST /api/collections/history/records
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] INSERT INTO `history` (`content`, `date`, `id`, `title`) VALUES ('照片定格了那天的阳光，也定格了每个人的高中模样。', '2025-06', 'ty9pf1u8w37a0ox', '毕业合影')
+INFO POST /api/collections/history/records
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] INSERT INTO `news` (`content`, `date`, `id`, `title`) VALUES ('请同学们在留言板留下所在城市和可参加时间，班委将汇总后确定地点。', '2026-05-01', '07fvyzxu7rvrhxh', '十年聚会意向征集')
+INFO POST /api/collections/news/records
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] INSERT INTO `news` (`content`, `date`, `id`, `title`) VALUES ('如果你手里有高清活动照片，可以发给资料组统一归档。', '2026-04-20', '1mrsytiibtoqn41', '毕业照电子版整理中')
+INFO POST /api/collections/news/records
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] INSERT INTO `news` (`content`, `date`, `id`, `title`) VALUES ('请确认自己的邮箱、城市和常用联系方式，便于后续活动通知。', '2026-04-12', 'qwowbgtanqbygb1', '班级通讯录更新')
+INFO POST /api/collections/news/records
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] INSERT INTO `activities` (`content`, `id`, `image`, `source_url`, `tag`, `title`) VALUES ('不只是名次，更是一起跑完、一起喊到嗓子沙哑的下午。', 'wdwqjdl855ch9s9', '', 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80', '运动会', '接力赛后的拥抱')
+INFO POST /api/collections/activities/records
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] INSERT INTO `activities` (`content`, `id`, `image`, `source_url`, `tag`, `title`) VALUES ('把课桌推到两边之后，整个教室都像临时搭起来的剧场。', '3sbjl8kpluo727e', '', 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=900&q=80', '元旦晚会', '教室里的小舞台')
+INFO POST /api/collections/activities/records
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] INSERT INTO `activities` (`content`, `id`, `image`, `source_url`, `tag`, `title`) VALUES ('有人拍照，有人整理零食，车刚开动，笑声就已经坐满了整排座位。', 'dwl605kg09kr6ex', '', 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80', '毕业旅行', '出发那天的晴天')
+INFO POST /api/collections/activities/records
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] INSERT INTO `photos` (`description`, `id`, `image`, `source_url`, `title`) VALUES ('高2022级15班全班合影，属于大家的第一张首页主图。', 'py9x7h75g3fv00p', '', 'assets/class-photo.jpg', '高2022级15班')
+INFO POST /api/collections/photos/records
+[0.00ms] SELECT `_superusers`.* FROM `_superusers` WHERE `_superusers`.`id`='75j5wwybr1nv8jm' LIMIT 1
+[0.00ms] INSERT INTO `photos` (`description`, `id`, `image`, `source_url`, `title`) VALUES ('高2022级15班蹭饭指南，全班同学升学去向纪念图。', 'd0ngj8lw2l1oef9', '', 'assets/class-destination-map.jpg', '资料组')
+INFO POST /api/collections/photos/records
+[0.00ms] SELECT `members`.* FROM `members` LIMIT 5
+[0.00ms] SELECT COUNT(DISTINCT `members`.`_rowid_`) FROM `members`
+INFO GET /api/collections/members/records?perPage=5
+[0.00ms] SELECT `photos`.* FROM `photos` LIMIT 5
+[0.00ms] SELECT COUNT(DISTINCT `photos`.`_rowid_`) FROM `photos`
+INFO GET /api/collections/photos/records?perPage=5
+[0.00ms] SELECT `activities`.* FROM `activities` LIMIT 5
+[0.00ms] SELECT COUNT(DISTINCT `activities`.`_rowid_`) FROM `activities`
+INFO GET /api/collections/activities/records?perPage=5
+[0.00ms] SELECT `messages`.* FROM `messages` LIMIT 5
+[0.00ms] SELECT COUNT(DISTINCT `messages`.`_rowid_`) FROM `messages`
+INFO GET /api/collections/messages/records?perPage=5
+[0.00ms] SELECT `news`.* FROM `news` LIMIT 5
+[0.00ms] SELECT COUNT(DISTINCT `news`.`_rowid_`) FROM `news`
+INFO GET /api/collections/news/records?perPage=5
+[0.00ms] SELECT `memories`.* FROM `memories` LIMIT 5
+[0.00ms] SELECT COUNT(DISTINCT `memories`.`_rowid_`) FROM `memories`
+INFO GET /api/collections/memories/records?perPage=5
+[0.00ms] SELECT `history`.* FROM `history` LIMIT 5
+[0.00ms] SELECT COUNT(DISTINCT `history`.`_rowid_`) FROM `history`
+INFO GET /api/collections/history/records?perPage=5
+[3.00ms] SELECT `_collections`.* FROM `_collections` WHERE `type`='auth' ORDER BY `rowid` ASC
+[4.00ms] SELECT `_collections`.* FROM `_collections` WHERE `type`='auth' ORDER BY `rowid` ASC
+[0.00ms] SELECT `_otps`.* FROM `_otps` WHERE (`collectionRef`='pbc_3142635823') AND (`created` < '2026-04-29 12:57:00.022Z')
+[0.00ms] SELECT `_mfas`.* FROM `_mfas` WHERE (`collectionRef`='pbc_3142635823') AND (`created` < '2026-04-29 12:30:00.022Z')
+[0.00ms] SELECT `_otps`.* FROM `_otps` WHERE (`collectionRef`='_pb_users_auth_') AND (`created` < '2026-04-29 12:57:00.022Z')
+[0.00ms] SELECT `_mfas`.* FROM `_mfas` WHERE (`collectionRef`='_pb_users_auth_') AND (`created` < '2026-04-29 12:30:00.022Z')
+INFO GET /api/health

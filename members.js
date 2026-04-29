@@ -42,7 +42,7 @@ function bindMemberForm() {
       await withSubmitLoading(submitBtn, async () => {
         const member = { name, note };
         member._file = file;
-        member._field = "avatar";
+        member._field = "photo";
         await createItem("members", member);
       });
       showToast("添加成功！", "success");

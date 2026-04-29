@@ -1,9 +1,15 @@
 {
-  "name": "classroom-memory",
+  "name": "classroom-backend",
   "version": "1.0.0",
-  "description": "高2022级15班回忆馆 - PocketBase 后端",
+  "description": "高2022级15班回忆馆 - 后端删除服务",
+  "main": "server.js",
   "scripts": {
-    "start": "pocketbase.exe serve --dev",
-    "dev": "pocketbase.exe serve --dev"
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "@supabase/supabase-js": "^2.39.0"
   }
 }

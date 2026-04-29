@@ -2,164 +2,98 @@ const ACCESS_PASSWORD = "152025";
 const ADMIN_PASSWORD = "rhj152025";
 const ACCESS_STORAGE_KEY = "class15-access-granted";
 const ADMIN_STORAGE_KEY = "class15-admin-mode";
-const PB_AUTH_KEY = "class15-pb-token";
 
-const PB_URL = "http://127.0.0.1:8090";
+const SUPABASE_URL = "https://emonrzvnfgqzlnsmewpy.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVtb25yenZuZmdxemxuc21ld3B5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwMjUwMTgsImV4cCI6MjA5MjYwMTAxOH0.x3ZEBN8aLldVfeXjoUMFCHnIy7oWXpp3wDmxBUGdfgw";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-function pbFileUrl(collection, recordId, filename) {
-  if (!filename) return "";
-  return `${PB_URL}/api/files/${collection}/${recordId}/${filename}`;
+function getSupabase() {
+  return { url: SUPABASE_URL, key: SUPABASE_ANON_KEY };
 }
 
-async function pbAuth() {
-  const cached = sessionStorage.getItem(PB_AUTH_KEY);
-  if (cached) {
-    try {
-      const parsed = JSON.parse(cached);
-      if (parsed && parsed.expires > Date.now()) return parsed.token;
-    } catch {}
-  }
-  const res = await fetch(`${PB_URL}/api/collections/_superusers/auth-with-password`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ identity: "admin@class15.com", password: "rhj152025" }),
+async function supabaseFetch(table, options = {}) {
+  const { method = "GET", headers = {}, body, params = "" } = options;
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, {
+    method,
+    headers: {
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": "application/json",
+      ...headers,
+    },
+    body: body ? JSON.stringify(body) : undefined,
   });
-  if (!res.ok) throw new Error("PocketBase 管理员认证失败");
-  const data = await res.json();
-  sessionStorage.setItem(PB_AUTH_KEY, JSON.stringify({
-    token: data.token,
-    expires: Date.now() + 3600000,
-  }));
-  return data.token;
-}
-
-function toDateStr(iso) {
-  return iso ? iso.split("T")[0] : iso;
-}
-
-function mapPbRecord(category, record) {
-  const base = { id: record.id, created_at: record.created_at };
-  switch (category) {
-    case "messages":
-      return { ...base, name: record.name, text: record.content, date: toDateStr(record.created_at) };
-    case "members":
-      return {
-        ...base, name: record.name,
-        photo: pbFileUrl("members", record.id, record.avatar) || "",
-        note: record.bio || "",
-        role: record.role || "",
-      };
-    case "photos":
-      return {
-        ...base, name: record.title,
-        image: pbFileUrl("photos", record.id, record.image) || record.source_url || "",
-        caption: record.description || "",
-        date: toDateStr(record.created_at),
-      };
-    case "news":
-      return { ...base, title: record.title, text: record.content || "", date: record.date || toDateStr(record.created_at) };
-    case "activities":
-      return {
-        ...base, tag: record.tag || "", title: record.title, text: record.content || "",
-        image: pbFileUrl("activities", record.id, record.image) || record.source_url || "",
-      };
-    case "memories":
-      return { ...base, name: record.name || "", text: record.content, date: toDateStr(record.created_at) };
-    case "history":
-      return { ...base, date: record.date || "", title: record.title, text: record.content || "" };
-    default:
-      return { ...base, ...record };
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || err.details || `操作失败 (${res.status})`);
   }
+  if (method === "GET") return res.json();
+  if (method === "HEAD") return res;
+  const text = await res.text();
+  try { return text ? JSON.parse(text) : { ok: true }; } catch { return { ok: true }; }
+}
+
+async function supabaseUpload(bucket, path, file) {
+  const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${bucket}/${path}`, {
+    method: "POST",
+    headers: {
+      "apikey": SUPABASE_ANON_KEY,
+      "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+      "Content-Type": file.type,
+    },
+    body: file,
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || err.details || "文件上传失败");
+  }
+  return `${SUPABASE_URL}/storage/v1/object/public/${bucket}/${path}`;
 }
 
 async function fetchList(category) {
   try {
-    const res = await fetch(`${PB_URL}/api/collections/${category}/records?sort=-created`);
-    if (!res.ok) return [];
-    const data = await res.json();
-    return (data.items || []).map(r => mapPbRecord(category, r));
+    const data = await supabaseFetch(category, { params: "?select=*&order=created_at.desc" });
+    return data || [];
   } catch (e) {
-    console.warn("PocketBase 读取失败:", e.message);
+    console.warn("Supabase 读取失败:", e.message);
     return [];
-  }
-}
-
-function toPbRecord(category, data) {
-  switch (category) {
-    case "messages": return { name: data.name, content: data.text };
-    case "members": return { name: data.name, bio: data.note || "", role: data.role || "" };
-    case "news": return { title: data.title, date: data.date || toDateStr(new Date().toISOString()), content: data.text || "" };
-    case "photos": return { title: data.name, description: data.caption || "", source_url: data.image || "" };
-    case "activities": return { tag: data.tag || "", title: data.title, content: data.text || "", source_url: data.image || "" };
-    case "memories": return { name: data.name || "", content: data.text || "" };
-    case "history": return { date: data.date || "", title: data.title, content: data.text || "" };
-    default: return { ...data };
   }
 }
 
 async function createItem(category, data) {
   const hasFile = data._file instanceof File;
   if (hasFile) {
-    const fd = new FormData();
-    const mapped = toPbRecord(category, data);
-    for (const [key, val] of Object.entries(mapped)) {
-      fd.append(key, val);
-    }
-    fd.append(data._field || "image", data._file, data._file.name);
-    const res = await fetch(`${PB_URL}/api/collections/${category}/records`, {
-      method: "POST",
-      body: fd,
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || `创建失败 (${res.status})`);
-    }
-    const record = await res.json();
-    return { ok: true, data: mapPbRecord(category, record) };
+    const file = data._file;
+    const ext = file.name.split(".").pop();
+    const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+    const field = data._field || "image";
+    delete data._file;
+    delete data._field;
+    data[field] = await supabaseUpload(category, fileName, file);
   }
-  const body = toPbRecord(category, data);
-  const res = await fetch(`${PB_URL}/api/collections/${category}/records`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || `创建失败 (${res.status})`);
-  }
-  const record = await res.json();
-  return { ok: true, data: mapPbRecord(category, record) };
+  const result = await supabaseFetch(category, { method: "POST", body: data });
+  return { ok: true, data: result };
 }
 
 async function updateItem(category, id, data) {
-  const token = await pbAuth();
-  const body = (() => {
-    switch (category) {
-      case "activities": return { tag: data.tag, title: data.title, content: data.content, source_url: data.image_url || "" };
-      default: return data;
-    }
-  })();
-  const res = await fetch(`${PB_URL}/api/collections/${category}/records/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-    body: JSON.stringify(body),
-  });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || `更新失败 (${res.status})`);
+  const hasFile = data._file instanceof File;
+  if (hasFile) {
+    const file = data._file;
+    const ext = file.name.split(".").pop();
+    const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
+    const field = data._field || "image";
+    delete data._file;
+    delete data._field;
+    data[field] = await supabaseUpload(category, fileName, file);
   }
+  await supabaseFetch(category, { method: "PATCH", params: `?id=eq.${id}`, body: data });
   return { ok: true };
 }
 
 async function deleteItem(category, id) {
-  const token = await pbAuth();
-  const res = await fetch(`${PB_URL}/api/collections/${category}/records/${id}`, {
-    method: "DELETE",
-    headers: { "Authorization": `Bearer ${token}` },
-  });
+  const res = await fetch(`https://classroom-backend.onrender.com/api/delete/${category}/${id}`, { method: "DELETE" });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.message || `删除失败 (${res.status})`);
@@ -170,9 +104,7 @@ async function deleteItem(category, id) {
 const domCache = new Map();
 
 function getCachedElement(id) {
-  if (!domCache.has(id)) {
-    domCache.set(id, document.getElementById(id));
-  }
+  if (!domCache.has(id)) domCache.set(id, document.getElementById(id));
   return domCache.get(id);
 }
 
@@ -293,9 +225,7 @@ function setAdminMode(enabled) {
   sessionStorage.setItem(ADMIN_STORAGE_KEY, enabled ? "yes" : "no");
   document.body.classList.toggle("admin-mode", enabled);
   const toggle = getCachedElement("admin-toggle");
-  if (toggle) {
-    toggle.textContent = enabled ? "退出管理员模式" : "管理员模式";
-  }
+  if (toggle) toggle.textContent = enabled ? "退出管理员模式" : "管理员模式";
   document.dispatchEvent(new CustomEvent("adminmodechange", { detail: { enabled } }));
 }
 
@@ -347,16 +277,10 @@ function setupAdminMode() {
   const toggle = getCachedElement("admin-toggle");
   if (!toggle) return;
   toggle.addEventListener("click", () => {
-    if (isAdminMode()) {
-      setAdminMode(false);
-      return;
-    }
+    if (isAdminMode()) { setAdminMode(false); return; }
     const input = window.prompt("请输入管理员密码");
     if (input === null) return;
-    if (input === ADMIN_PASSWORD) {
-      setAdminMode(true);
-      return;
-    }
+    if (input === ADMIN_PASSWORD) { setAdminMode(true); return; }
     showToast("管理员密码不正确。", "error");
   });
 }
@@ -380,10 +304,7 @@ async function renderPostsFromApi(category, targetId, emptyText) {
 }
 
 async function handleDeleteAction(category, id, rerender) {
-  if (!isAdminMode()) {
-    showToast("只有管理员可以删除内容。", "error");
-    return;
-  }
+  if (!isAdminMode()) { showToast("只有管理员可以删除内容。", "error"); return; }
   if (!window.confirm("确定删除这条内容？")) return;
   try {
     await deleteItem(category, id);

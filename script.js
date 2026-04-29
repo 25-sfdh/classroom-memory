@@ -1,4 +1,4 @@
-// ── 首页渲染：所有数据从 PocketBase 读取 ──
+// ── 首页渲染：所有数据从 Supabase 读取 ──
 
 async function renderMembers() {
   const target = document.getElementById("member-list");
@@ -113,7 +113,7 @@ async function renderPosts(category, targetId, emptyText) {
   `).join("");
 }
 
-// ── 首页表单：提交到 PocketBase ──
+// ── 首页表单：提交到 Supabase ──
 
 function bindPostForm({ formId, nameId, textId, category, listId, emptyText }) {
   const form = document.getElementById(formId);
@@ -205,7 +205,7 @@ function bindMemberForm() {
       await withSubmitLoading(submitBtn, async () => {
         const member = { name, note };
         member._file = file;
-        member._field = "avatar";
+        member._field = "photo";
         await createItem("members", member);
       });
       showToast("添加成功！", "success");
