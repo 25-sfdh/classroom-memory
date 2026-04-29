@@ -62,14 +62,14 @@
       </div>
     </section>
 
-    <section id="news" class="section muted admin-only" aria-labelledby="news-title">
+    <section id="news" class="section muted" aria-labelledby="news-title">
       <div class="section-heading">
         <p class="eyebrow">Notice</p>
-        <h2 id="news-title">班级新闻 <span class="admin-badge">管理员</span></h2>
+        <h2 id="news-title">班级新闻 <span class="admin-badge admin-only">管理员</span></h2>
         <p>可以发布班级通知、聚会安排、资料整理进度等内容。</p>
       </div>
-      <div class="editor-layout admin-collapsible">
-        <form id="news-form" class="stacked-form panel">
+      <div class="editor-layout">
+        <form id="news-form" class="stacked-form panel admin-only">
           <label>
             日期
             <input id="news-date" type="date" required>
@@ -94,7 +94,7 @@
     <a href="../index.html">回到首页</a>
   </footer>
 
-  <script src="../common.js"></script>
-  <script src="../news.js"></script>
+  <script src="../common.js?v=20260429d"></script>
+  <script src="../news.js?v=20260429d"></script>
 </body>
 </html>

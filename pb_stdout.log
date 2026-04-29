@@ -404,3 +404,9 @@ INFO GET /api/collections/history/records?perPage=5
 [0.00ms] SELECT `_otps`.* FROM `_otps` WHERE (`collectionRef`='_pb_users_auth_') AND (`created` < '2026-04-29 12:57:00.022Z')
 [0.00ms] SELECT `_mfas`.* FROM `_mfas` WHERE (`collectionRef`='_pb_users_auth_') AND (`created` < '2026-04-29 12:30:00.022Z')
 INFO GET /api/health
+[1.00ms] SELECT `_collections`.* FROM `_collections` WHERE `type`='auth' ORDER BY `rowid` ASC
+[1.00ms] SELECT `_collections`.* FROM `_collections` WHERE `type`='auth' ORDER BY `rowid` ASC
+WARN Failed to delete expired OTP sessions
+└─ {"error":"unable to open database file (14); failed query: SELECT {{_collections}}.* FROM `_collections` WHERE `type`={:p0} ORDER BY `rowid` ASC"}
+WARN Failed to delete expired MFA sessions
+└─ {"error":"unable to open database file (14); failed query: SELECT {{_collections}}.* FROM `_collections` WHERE `type`={:p0} ORDER BY `rowid` ASC"}

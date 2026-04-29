@@ -62,17 +62,17 @@
       </div>
     </section>
 
-    <section id="history" class="section admin-only" aria-labelledby="history-title">
+    <section id="history" class="section" aria-labelledby="history-title">
       <div class="section-heading">
         <p class="eyebrow">Timeline</p>
-        <h2 id="history-title">班级历史 <span class="admin-badge">管理员</span></h2>
+        <h2 id="history-title">班级历史 <span class="admin-badge admin-only">管理员</span></h2>
         <p>记录 15 班从入学到毕业的重要节点，也可以继续补充新的集体事件。</p>
       </div>
-      <div class="editor-layout admin-collapsible">
-        <form id="history-form" class="stacked-form panel">
+      <div class="editor-layout">
+        <form id="history-form" class="stacked-form panel admin-only">
           <label>
             时间
-            <input id="history-date" type="month" required>
+            <input id="history-date" type="date" required>
           </label>
           <label>
             事件标题
@@ -94,7 +94,7 @@
     <a href="../index.html">回到首页</a>
   </footer>
 
-  <script src="../common.js"></script>
-  <script src="../history.js"></script>
+  <script src="../common.js?v=20260429f"></script>
+  <script src="../history.js?v=20260429f"></script>
 </body>
 </html>

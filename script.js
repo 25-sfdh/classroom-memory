@@ -28,10 +28,10 @@ async function renderPhotos() {
   }
   target.innerHTML = photos.map((photo) => `
     <article class="photo-card">
-      ${imageMarkup(photo.image, photo.caption || photo.name || "照片", "photos")}
+      ${imageMarkup(photo.image || photo.image_url, photo.caption || photo.description || photo.title || "照片", "class-uploads")}
       <div>
-        <h3>${escapeHtml(photo.name)}</h3>
-        <p>${escapeHtml(photo.caption)}</p>
+        <h3>${escapeHtml(photo.name || photo.title)}</h3>
+        <p>${escapeHtml(photo.caption || photo.description)}</p>
         <time>${escapeHtml(photo.date || photo.created_at)}</time>
       </div>
     </article>
@@ -71,9 +71,9 @@ async function renderNews() {
   }
   target.innerHTML = news.map((item) => `
     <article>
-      <time datetime="${escapeAttribute(item.date)}">${formatDate(item.date)}</time>
+      <time datetime="${escapeAttribute(item.date || item.created_at)}">${formatDate((item.date || item.created_at || "").slice(0, 10))}</time>
       <h3>${escapeHtml(item.title)}</h3>
-      <p>${escapeHtml(item.text)}</p>
+      <p>${escapeHtml(item.text || item.content)}</p>
     </article>
   `).join("");
 }
@@ -81,16 +81,18 @@ async function renderNews() {
 async function renderHistory() {
   const target = document.getElementById("history-list");
   if (!target) return;
-  const history = await fetchList("history");
+  const history = (await fetchList("history"))
+    .slice()
+    .sort((a, b) => String(a.date || "").localeCompare(String(b.date || "")));
   if (!history.length) {
     target.innerHTML = `<li><span>待补充</span><h3>还没有班级历史</h3><p>可以添加第一条 15 班的重要事件。</p></li>`;
     return;
   }
   target.innerHTML = history.map((item) => `
     <li>
-      <span>${formatMonth(item.date)}</span>
+      <span>${formatDate(item.date)}</span>
       <h3>${escapeHtml(item.title)}</h3>
-      <p>${escapeHtml(item.text)}</p>
+      <p>${escapeHtml(item.text || item.content)}</p>
     </li>
   `).join("");
 }
@@ -106,7 +108,7 @@ async function renderPosts(category, targetId, emptyText) {
   target.innerHTML = posts.map((post) => `
     <article class="post-card">
       <strong>${escapeHtml(post.name)}</strong>
-      <p>${escapeHtml(post.text)}</p>
+      <p>${escapeHtml(post.text || post.content)}</p>
       <time>${escapeHtml(post.date || post.created_at)}</time>
     </article>
   `).join("");
@@ -124,9 +126,9 @@ function bindPostForm({ formId, nameId, textId, category, listId, emptyText }) {
     event.preventDefault();
     const item = {
       name: nameInput.value.trim(),
-      text: textInput.value.trim(),
+      content: textInput.value.trim(),
     };
-    if (!item.name || !item.text) return;
+    if (!item.name || !item.content) return;
 
     const submitBtn = form.querySelector('[type="submit"]');
     try {
@@ -165,8 +167,9 @@ function bindPhotoForm() {
     const submitBtn = form.querySelector('[type="submit"]');
     try {
       await withSubmitLoading(submitBtn, async () => {
-        const data = { name, caption };
+        const data = { title: name, description: caption };
         data._file = file;
+        data._field = "image_url";
         await createItem("photos", data);
       });
       showToast("上传成功！", "success");
@@ -265,11 +268,10 @@ function bindNewsForm() {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const item = {
-      date: dateInput.value,
       title: titleInput.value.trim(),
-      text: textInput.value.trim()
+      content: textInput.value.trim()
     };
-    if (!item.date || !item.title || !item.text) return;
+    if (!item.title || !item.content) return;
 
     const submitBtn = form.querySelector('[type="submit"]');
     try {
@@ -295,9 +297,9 @@ function bindHistoryForm() {
     const item = {
       date: dateInput.value,
       title: titleInput.value.trim(),
-      text: textInput.value.trim()
+      content: textInput.value.trim()
     };
-    if (!item.date || !item.title || !item.text) return;
+    if (!item.date || !item.title || !item.content) return;
 
     const submitBtn = form.querySelector('[type="submit"]');
     try {

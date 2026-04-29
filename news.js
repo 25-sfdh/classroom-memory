@@ -7,9 +7,9 @@ async function renderNews() {
   }
   target.innerHTML = news.map((item) => `
     <article>
-      <time datetime="${escapeAttribute(item.date)}">${formatDate(item.date)}</time>
+      <time datetime="${escapeAttribute(item.date || item.created_at)}">${formatDate((item.date || item.created_at || "").slice(0, 10))}</time>
       <h3>${escapeHtml(item.title)}</h3>
-      <p>${escapeHtml(item.text)}</p>
+      <p>${escapeHtml(item.text || item.content)}</p>
       ${isAdminMode() ? deleteActionMarkup("news", item.id) : ""}
     </article>
   `).join("");
@@ -25,11 +25,10 @@ function bindNewsForm() {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const item = {
-      date: dateInput.value,
       title: titleInput.value.trim(),
-      text: textInput.value.trim()
+      content: textInput.value.trim()
     };
-    if (!item.date || !item.title || !item.text) return;
+    if (!item.title || !item.content) return;
 
     const submitBtn = form.querySelector('[type="submit"]');
     try {

@@ -8,9 +8,9 @@ function bindMemoryForm() {
     event.preventDefault();
     const item = {
       name: nameInput.value.trim(),
-      text: textInput.value.trim()
+      content: textInput.value.trim()
     };
-    if (!item.name || !item.text) return;
+    if (!item.name || !item.content) return;
 
     const submitBtn = form.querySelector('[type="submit"]');
     try {

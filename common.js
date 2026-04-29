@@ -101,11 +101,7 @@ async function updateItem(category, id, data) {
 }
 
 async function deleteItem(category, id) {
-  const res = await fetch(`https://classroom-backend.onrender.com/api/delete/${category}/${id}`, { method: "DELETE" });
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || `删除失败 (${res.status})`);
-  }
+  await supabaseFetch(category, { method: "DELETE", params: `?id=eq.${encodeURIComponent(id)}` });
   return { ok: true };
 }
 
@@ -329,7 +325,7 @@ async function renderPostsFromApi(category, targetId, emptyText) {
   target.innerHTML = posts.map((post) => `
     <article class="post-card">
       <strong>${escapeHtml(post.name)}</strong>
-      <p>${escapeHtml(post.text)}</p>
+      <p>${escapeHtml(post.text || post.content)}</p>
       <time>${escapeHtml(post.date || post.created_at)}</time>
       ${deleteActionMarkup(category, post.id)}
     </article>

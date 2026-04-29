@@ -7,10 +7,10 @@ async function renderPhotos() {
   }
   target.innerHTML = photos.map((photo) => `
     <article class="photo-card">
-      ${imageMarkup(photo.image, photo.caption || photo.name || "照片", "photos")}
+      ${imageMarkup(photo.image || photo.image_url, photo.caption || photo.description || photo.title || "照片", "class-uploads")}
       <div>
-        <h3>${escapeHtml(photo.name)}</h3>
-        <p>${escapeHtml(photo.caption)}</p>
+        <h3>${escapeHtml(photo.name || photo.title)}</h3>
+        <p>${escapeHtml(photo.caption || photo.description)}</p>
         <time>${escapeHtml(photo.date || photo.created_at)}</time>
         ${deleteActionMarkup("photos", photo.id)}
       </div>
@@ -41,8 +41,9 @@ function bindPhotoForm() {
     const submitBtn = form.querySelector('[type="submit"]');
     try {
       await withSubmitLoading(submitBtn, async () => {
-        const data = { name, caption };
+        const data = { title: name, description: caption };
         data._file = file;
+        data._field = "image_url";
         await createItem("photos", data);
       });
       showToast("上传成功！", "success");

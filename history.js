@@ -1,15 +1,17 @@
 async function renderHistory() {
   const target = document.getElementById("history-list");
-  const history = await fetchList("history");
+  const history = (await fetchList("history"))
+    .slice()
+    .sort((a, b) => String(a.date || "").localeCompare(String(b.date || "")));
   if (!history.length) {
     target.innerHTML = `<li><span>待补充</span><h3>还没有班级历史</h3><p>可以添加第一条 15 班的重要事件。</p></li>`;
     return;
   }
   target.innerHTML = history.map((item) => `
     <li>
-      <span>${formatMonth(item.date)}</span>
+      <span>${formatDate(item.date)}</span>
       <h3>${escapeHtml(item.title)}</h3>
-      <p>${escapeHtml(item.text)}</p>
+      <p>${escapeHtml(item.text || item.content)}</p>
       ${isAdminMode() ? deleteActionMarkup("history", item.id) : ""}
     </li>
   `).join("");
@@ -27,9 +29,9 @@ function bindHistoryForm() {
     const item = {
       date: dateInput.value,
       title: titleInput.value.trim(),
-      text: textInput.value.trim()
+      content: textInput.value.trim()
     };
-    if (!item.date || !item.title || !item.text) return;
+    if (!item.date || !item.title || !item.content) return;
 
     const submitBtn = form.querySelector('[type="submit"]');
     try {
