@@ -7,7 +7,7 @@ async function renderPhotos() {
   }
   target.innerHTML = photos.map((photo) => `
     <article class="photo-card">
-      <img src="${escapeAttribute(photo.image)}" alt="${escapeAttribute(photo.caption)}" loading="lazy">
+      ${imageMarkup(photo.image, photo.caption || photo.name || "照片", "photos")}
       <div>
         <h3>${escapeHtml(photo.name)}</h3>
         <p>${escapeHtml(photo.caption)}</p>

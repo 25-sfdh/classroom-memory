@@ -947,6 +947,20 @@ h3 {
   object-fit: cover;
 }
 
+.image-fallback {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  min-height: 180px;
+  padding: 18px;
+  color: var(--muted);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(255, 233, 239, 0.9));
+  border-bottom: 1px solid var(--line);
+  font-weight: 700;
+  text-align: center;
+}
+
 .member-card div {
   padding: 18px;
 }

@@ -10,15 +10,14 @@ async function renderMembers() {
   }
   target.innerHTML = members.map((member) => `
     <article class="member-card">
-      <img src="${escapeAttribute(member.photo)}" alt="${escapeAttribute(member.name)}的照片" loading="lazy">
+      ${imageMarkup(member.photo, `${member.name || "成员"}的照片`, "members")}
       <div>
         <h3>${escapeHtml(member.name)}</h3>
-        <p>${escapeHtml(member.note)}</p>
+        ${member.note ? `<p>${escapeHtml(member.note)}</p>` : ""}
       </div>
     </article>
   `).join("");
 }
-
 async function renderPhotos() {
   const target = document.getElementById("photo-list");
   if (!target) return;
@@ -29,7 +28,7 @@ async function renderPhotos() {
   }
   target.innerHTML = photos.map((photo) => `
     <article class="photo-card">
-      <img src="${escapeAttribute(photo.image)}" alt="${escapeAttribute(photo.caption)}" loading="lazy">
+      ${imageMarkup(photo.image, photo.caption || photo.name || "照片", "photos")}
       <div>
         <h3>${escapeHtml(photo.name)}</h3>
         <p>${escapeHtml(photo.caption)}</p>
@@ -51,7 +50,7 @@ async function renderActivities() {
     const largeClass = index === 0 ? " large" : "";
     return `
       <article class="activity-card${largeClass}">
-        <img src="${escapeAttribute(item.image)}" alt="${escapeAttribute(item.title)}" loading="lazy">
+        ${imageMarkup(item.image, item.title || "活动图片", "activities")}
         <div>
           <span>${escapeHtml(item.tag)}</span>
           <h3>${escapeHtml(item.title)}</h3>

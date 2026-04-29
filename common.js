@@ -109,7 +109,7 @@ function getCachedElement(id) {
 }
 
 function escapeHtml(value) {
-  return String(value).replace(/[&<>"']/g, (char) => {
+  return String(value ?? "").replace(/[&<>"']/g, (char) => {
     const entities = { "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#039;" };
     return entities[char];
   });
@@ -117,6 +117,31 @@ function escapeHtml(value) {
 
 function escapeAttribute(value) {
   return escapeHtml(value).replace(/`/g, "&#096;");
+}
+
+function getPublicImageUrl(value, bucket = "") {
+  const raw = String(value ?? "").trim();
+  if (!raw) return "";
+  if (/^(https?:|data:|blob:)/i.test(raw)) return raw;
+
+  const cleanPath = raw.replace(/^\/+/, "");
+  const path = bucket && cleanPath.startsWith(`${bucket}/`)
+    ? cleanPath.slice(bucket.length + 1)
+    : cleanPath;
+
+  return `${SUPABASE_URL}/storage/v1/object/public/${bucket || "uploads"}/${path}`;
+}
+
+function imageFallbackMarkup(label = "图片") {
+  return `<div class="image-fallback">${escapeHtml(label)}</div>`;
+}
+
+function imageMarkup(src, alt, bucket) {
+  const url = getPublicImageUrl(src, bucket);
+  if (!url) return imageFallbackMarkup(alt);
+  const fallback = imageFallbackMarkup(alt).replace(/"/g, "&quot;");
+
+  return `<img src="${escapeAttribute(url)}" alt="${escapeAttribute(alt)}" loading="lazy" onerror="this.outerHTML='${fallback}'">`;
 }
 
 function formatDate(value) {

@@ -7,16 +7,15 @@ async function renderMembers() {
   }
   target.innerHTML = members.map((member) => `
     <article class="member-card">
-      <img src="${escapeAttribute(member.photo)}" alt="${escapeAttribute(member.name)}的照片" loading="lazy">
+      ${imageMarkup(member.photo, `${member.name || "成员"}的照片`, "members")}
       <div>
         <h3>${escapeHtml(member.name)}</h3>
-        <p>${escapeHtml(member.note)}</p>
+        ${member.note ? `<p>${escapeHtml(member.note)}</p>` : ""}
         ${deleteActionMarkup("members", member.id)}
       </div>
     </article>
   `).join("");
 }
-
 function bindMemberForm() {
   const form = document.getElementById("member-form");
   const nameInput = document.getElementById("member-name");

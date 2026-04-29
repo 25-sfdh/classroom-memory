@@ -13,7 +13,7 @@ async function renderActivities() {
     `.trim();
     return `
       <article class="activity-card${largeClass}">
-        <img src="${escapeAttribute(item.image)}" alt="${escapeAttribute(item.title)}" loading="lazy">
+        ${imageMarkup(item.image, item.title || "活动图片", "activities")}
         <div>
           <span>${escapeHtml(item.tag)}</span>
           <h3>${escapeHtml(item.title)}</h3>
