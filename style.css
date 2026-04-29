@@ -1770,14 +1770,21 @@ input[type="file"]::file-selector-button:active {
 
   .admin-tools {
     right: 12px;
-    bottom: 92px;
-    left: 12px;
-    align-items: stretch;
+    bottom: 18px;
+    left: auto;
+    align-items: flex-end;
   }
 
-  .admin-status,
+  .admin-status {
+    display: none !important;
+  }
+
   .admin-toggle {
-    width: 100%;
+    width: auto;
+    min-height: 38px;
+    padding: 8px 14px;
+    font-size: 13px;
+    box-shadow: 0 10px 22px rgba(47, 111, 106, 0.22);
   }
 
   .post-card {

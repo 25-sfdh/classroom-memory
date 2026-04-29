@@ -8,6 +8,12 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const STORAGE_BUCKET = "class-uploads";
+const STORAGE_FOLDERS = {
+  members: "members",
+  photos: "photos",
+  activities: "activities",
+};
 
 function getSupabase() {
   return { url: SUPABASE_URL, key: SUPABASE_ANON_KEY };
@@ -68,10 +74,11 @@ async function createItem(category, data) {
     const file = data._file;
     const ext = file.name.split(".").pop();
     const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
-    const field = data._field || "image";
+    const folder = STORAGE_FOLDERS[category] || category;
+    const field = data._field || (category === "members" ? "avatar_url" : "image");
     delete data._file;
     delete data._field;
-    data[field] = await supabaseUpload(category, fileName, file);
+    data[field] = await supabaseUpload(STORAGE_BUCKET, `${folder}/${fileName}`, file);
   }
   const result = await supabaseFetch(category, { method: "POST", body: data });
   return { ok: true, data: result };
@@ -83,10 +90,11 @@ async function updateItem(category, id, data) {
     const file = data._file;
     const ext = file.name.split(".").pop();
     const fileName = `${Date.now()}_${Math.random().toString(36).slice(2)}.${ext}`;
-    const field = data._field || "image";
+    const folder = STORAGE_FOLDERS[category] || category;
+    const field = data._field || (category === "members" ? "avatar_url" : "image");
     delete data._file;
     delete data._field;
-    data[field] = await supabaseUpload(category, fileName, file);
+    data[field] = await supabaseUpload(STORAGE_BUCKET, `${folder}/${fileName}`, file);
   }
   await supabaseFetch(category, { method: "PATCH", params: `?id=eq.${id}`, body: data });
   return { ok: true };

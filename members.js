@@ -7,10 +7,10 @@ async function renderMembers() {
   }
   target.innerHTML = members.map((member) => `
     <article class="member-card">
-      ${imageMarkup(member.photo, `${member.name || "成员"}的照片`, "members")}
+      ${imageMarkup(member.photo || member.avatar_url, `${member.name || "成员"}的照片`, "class-uploads")}
       <div>
         <h3>${escapeHtml(member.name)}</h3>
-        ${member.note ? `<p>${escapeHtml(member.note)}</p>` : ""}
+        ${member.note || member.bio ? `<p>${escapeHtml(member.note || member.bio)}</p>` : ""}
         ${deleteActionMarkup("members", member.id)}
       </div>
     </article>
@@ -39,9 +39,9 @@ function bindMemberForm() {
     const submitBtn = form.querySelector('[type="submit"]');
     try {
       await withSubmitLoading(submitBtn, async () => {
-        const member = { name, note };
+        const member = { name, bio: note, role: "" };
         member._file = file;
-        member._field = "photo";
+        member._field = "avatar_url";
         await createItem("members", member);
       });
       showToast("添加成功！", "success");
