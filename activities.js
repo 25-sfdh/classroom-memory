@@ -86,30 +86,35 @@ function bindActivityForm() {
     const tag = tagInput.value.trim();
     const title = titleInput.value.trim();
     const content = textInput.value.trim();
-    if (!tag || !title || !content) return;
+    if (!title || !content) return;
 
     try {
       await withSubmitLoading(submitButton, async () => {
-        let imageUrl;
-        if (fileInput.files[0]) {
-          imageUrl = await supabaseUpload(fileInput.files[0], "activities");
-        } else if (editId) {
-          const activities = await fetchList("activities");
-          const existing = activities.find(a => String(a.id) === editId);
-          imageUrl = existing ? existing.image : "../assets/class-photo.jpg";
-        } else {
-          imageUrl = "../assets/class-photo.jpg";
-        }
-
         if (editId) {
-          await updateItem("activities", Number(editId), {
-            tag,
-            title,
-            content,
-            image_url: imageUrl
-          });
+          const updates = { tag, title, content };
+          const file = fileInput.files[0];
+          if (file) {
+            const fd = new FormData();
+            fd.append("tag", tag);
+            fd.append("title", title);
+            fd.append("content", content);
+            fd.append("image", file, file.name);
+            const token = await pbAuth();
+            const res = await fetch(`${PB_URL}/api/collections/activities/records/${editId}`, {
+              method: "PATCH",
+              headers: { "Authorization": `Bearer ${token}` },
+              body: fd,
+            });
+            if (!res.ok) throw new Error((await res.json().catch(() => ({}))).message || `更新失败`);
+          } else {
+            await updateItem("activities", editId, updates);
+          }
         } else {
-          await createItem("activities", { tag, title, text: content, image: imageUrl });
+          const data = { tag, title, text: content };
+          if (fileInput.files[0]) {
+            data._file = fileInput.files[0];
+          }
+          await createItem("activities", data);
         }
       });
 

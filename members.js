@@ -40,8 +40,9 @@ function bindMemberForm() {
     const submitBtn = form.querySelector('[type="submit"]');
     try {
       await withSubmitLoading(submitBtn, async () => {
-        const photoUrl = await supabaseUpload(file, "members");
-        const member = { name, note, photo: photoUrl };
+        const member = { name, note };
+        member._file = file;
+        member._field = "avatar";
         await createItem("members", member);
       });
       showToast("添加成功！", "success");

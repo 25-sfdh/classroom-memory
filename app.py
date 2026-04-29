@@ -1,4 +1,4 @@
-import sqlite3
+﻿import sqlite3
 import os
 import uuid
 from datetime import datetime
@@ -202,7 +202,7 @@ def get_defaults(category):
         ],
         "photos": [
             {"name": "高2022级15班", "caption": "高2022级15班全班合影，属于大家的第一张首页主图。", "image": "assets/class-photo.jpg"},
-            {"name": "资料组", "caption": "高2022级15班曾饭指南，全班同学升学去向纪念图。", "image": "assets/class-destination-map.jpg"}
+            {"name": "资料组", "caption": "高2022级15班蹭饭指南，全班同学升学去向纪念图。", "image": "assets/class-destination-map.jpg"}
         ]
     }
     return defaults.get(category, [])

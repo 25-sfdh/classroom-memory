@@ -41,13 +41,9 @@ function bindPhotoForm() {
     const submitBtn = form.querySelector('[type="submit"]');
     try {
       await withSubmitLoading(submitBtn, async () => {
-        const imageUrl = await supabaseUpload(file, "photos");
-        const photo = {
-          name, caption,
-          image: imageUrl,
-          date: new Date().toLocaleDateString("zh-CN")
-        };
-        await createItem("photos", photo);
+        const data = { name, caption };
+        data._file = file;
+        await createItem("photos", data);
       });
       showToast("上传成功！", "success");
       await renderPhotos();
