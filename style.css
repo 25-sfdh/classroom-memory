@@ -1387,6 +1387,51 @@ input[type="file"]::file-selector-button:active {
   font-size: 13px;
 }
 
+.comment-section {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.comment-section h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.comment-list {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.comment-item {
+  padding: 10px 12px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.comment-item p {
+  margin: 0;
+}
+
+.comment-item time {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.comment-empty {
+  margin: 0;
+  color: var(--muted-light);
+  font-size: 13px;
+}
+
+.comment-form {
+  display: grid;
+  gap: 8px;
+}
+
 .empty-state {
   padding: 48px 24px;
   color: var(--muted);
