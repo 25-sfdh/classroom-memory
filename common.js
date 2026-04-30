@@ -243,7 +243,7 @@ async function withSubmitLoading(button, asyncFn) {
 }
 
 function isAccessGranted() {
-  return sessionStorage.getItem(ACCESS_STORAGE_KEY) === "yes";
+  return localStorage.getItem(ACCESS_STORAGE_KEY) === "yes";
 }
 
 function isAdminMode() {
@@ -271,7 +271,7 @@ function setupPasswordGate() {
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     if (input.value === ACCESS_PASSWORD) {
-      sessionStorage.setItem(ACCESS_STORAGE_KEY, "yes");
+      localStorage.setItem(ACCESS_STORAGE_KEY, "yes");
       gate.classList.remove("is-visible");
       document.body.classList.remove("locked");
       error.textContent = "";
