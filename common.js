@@ -105,6 +105,28 @@ async function deleteItem(category, id) {
   return { ok: true };
 }
 
+async function fetchComments(targetType, targetId) {
+  const type = encodeURIComponent(targetType);
+  const id = encodeURIComponent(targetId);
+  try {
+    return await supabaseFetch("comments", {
+      params: `?select=*&target_type=eq.${type}&target_id=eq.${id}&order=created_at.asc`,
+    });
+  } catch (e) {
+    console.warn("评论读取失败:", e.message);
+    return [];
+  }
+}
+
+async function addComment(targetType, targetId, name, content) {
+  return createItem("comments", {
+    target_type: targetType,
+    target_id: String(targetId),
+    name: String(name || "").trim(),
+    content: String(content || "").trim(),
+  });
+}
+
 const domCache = new Map();
 
 function getCachedElement(id) {
