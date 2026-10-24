@@ -11,7 +11,7 @@ async function renderMemories() {
     return `
       <article class="post-card">
         <h3>${escapeHtml(item.name || "匿名同学")}</h3>
-        <p>${escapeHtml(item.content)}</p>
+        <p>${escapeHtml(item.text || item.content)}</p>
         <time>${escapeHtml(item.date || item.created_at)}</time>
         ${deleteActionMarkup("memories", item.id)}
         <section class="comment-section">
