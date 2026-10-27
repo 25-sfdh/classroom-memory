@@ -1387,6 +1387,103 @@ input[type="file"]::file-selector-button:active {
   font-size: 13px;
 }
 
+.comment-section {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.comment-section h4 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.comment-list {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.comment-item {
+  padding: 10px 12px;
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+}
+
+.comment-item p {
+  margin: 0;
+}
+
+.comment-item time {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+.comment-empty {
+  margin: 0;
+  color: var(--muted-light);
+  font-size: 13px;
+}
+
+.comment-form {
+  display: grid;
+  gap: 8px;
+}
+
+.comment-form label {
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.comment-status,
+.comment-toolbar {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.comment-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.comment-retry {
+  margin-bottom: 10px;
+}
+
+.comment-retry[hidden] {
+  display: none;
+}
+
+.comment-item strong {
+  display: inline;
+  font-size: inherit;
+}
+
+.comment-login {
+  width: min(420px, calc(100vw - 32px));
+  box-sizing: border-box;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  color: var(--ink);
+  background: var(--surface-soft);
+}
+
+.comment-login::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.comment-login-error {
+  color: #a62e2e;
+}
+
 .empty-state {
   padding: 48px 24px;
   color: var(--muted);

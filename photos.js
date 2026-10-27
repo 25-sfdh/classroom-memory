@@ -1,21 +1,28 @@
+let photosRenderVersion = 0;
+
 async function renderPhotos() {
+  const version = ++photosRenderVersion;
   const target = document.getElementById("photo-list");
+  if (!target) return;
   const photos = await fetchList("photos");
+  if (version !== photosRenderVersion) return;
   if (!photos.length) {
     target.innerHTML = `<div class="empty-state">还没有照片，先上传一张班级回忆吧。</div>`;
     return;
   }
-  target.innerHTML = photos.map((photo) => `
-    <article class="photo-card">
+  target.innerHTML = photos.map(photo => `
+    <article class="photo-card" data-photo-id="${escapeAttribute(photo.id)}">
       ${imageMarkup(photo.image || photo.image_url, photo.caption || photo.description || photo.title || "照片", "class-uploads")}
       <div>
         <h3>${escapeHtml(photo.name || photo.title)}</h3>
         <p>${escapeHtml(photo.caption || photo.description)}</p>
         <time>${escapeHtml(photo.date || photo.created_at)}</time>
         ${deleteActionMarkup("photos", photo.id)}
+        ${commentSectionMarkup("photo", photo.id)}
       </div>
     </article>
   `).join("");
+  loadCommentSections(target);
 }
 
 function bindPhotoForm() {
@@ -60,12 +67,15 @@ function bindPhotoDelete() {
 
   list.addEventListener("click", async (event) => {
     const button = event.target.closest('[data-action="delete-item"][data-category="photos"]');
-    if (!button) return;
-    await handleDeleteAction("photos", button.dataset.id, renderPhotos);
+    if (button) {
+      await handleDeleteAction("photos", button.dataset.id, renderPhotos);
+      return;
+    }
   });
 }
 
 requestAnimationFrame(() => renderPhotos());
 bindPhotoForm();
 bindPhotoDelete();
+bindCommentEvents(document.getElementById("photo-list"));
 document.addEventListener("adminmodechange", () => renderPhotos());
