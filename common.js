@@ -20,7 +20,7 @@ function getSupabase() {
 }
 
 async function supabaseFetch(table, options = {}) {
-  const { method = "GET", headers = {}, body, params = "" } = options;
+  const { method = "GET", headers = {}, body, params = "", signal } = options;
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}${params}`, {
     method,
     headers: {
@@ -30,6 +30,7 @@ async function supabaseFetch(table, options = {}) {
       ...headers,
     },
     body: body ? JSON.stringify(body) : undefined,
+    signal,
   });
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
@@ -101,30 +102,9 @@ async function updateItem(category, id, data) {
 }
 
 async function deleteItem(category, id) {
+  if (category === "comments") return deleteComment(id);
   await supabaseFetch(category, { method: "DELETE", params: `?id=eq.${encodeURIComponent(id)}` });
   return { ok: true };
-}
-
-async function fetchComments(targetType, targetId) {
-  const type = encodeURIComponent(targetType);
-  const id = encodeURIComponent(targetId);
-  try {
-    return await supabaseFetch("comments", {
-      params: `?select=*&target_type=eq.${type}&target_id=eq.${id}&order=created_at.asc`,
-    });
-  } catch (e) {
-    console.warn("评论读取失败:", e.message);
-    return [];
-  }
-}
-
-async function addComment(targetType, targetId, name, content) {
-  return createItem("comments", {
-    target_type: targetType,
-    target_id: String(targetId),
-    name: String(name || "").trim(),
-    content: String(content || "").trim(),
-  });
 }
 
 const domCache = new Map();
